@@ -2,7 +2,7 @@
 import { useState } from "react";
 function Rightsidepanel() {
   const [newItem, setNewItem] = useState("");
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(0);
 
   const botQuestion = {
     0: { question: "This is the first question, what is 3 + 4 ?", type: 0 },
@@ -41,6 +41,13 @@ function Rightsidepanel() {
     // inputField.value = "";
     setNewItem("");
   }
+
+  function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      newItem !== "" && output(newItem);
+      setNewItem("");
+    }
+  }
   // document.addEventListener("DOMContentLoaded", () => {
   //   const inputField = document.getElementById("input");
   //   inputField.addEventListener("keydown", function (e) {
@@ -57,7 +64,13 @@ function Rightsidepanel() {
   }
 
   function output(input) {
-    userAnswer[count].answer = parseInt(input);
+    if (
+      count < Object.keys(botQuestion).length &&
+      count < Object.keys(userAnswer).length
+    ) {
+      // Should be using useState here
+      userAnswer[count].answer = parseInt(input);
+    }
     // console.log(userAnswer);
 
     addChatUserAnswer(input);
@@ -74,11 +87,14 @@ function Rightsidepanel() {
 
     /* ********* Adding Ends ****************** */
 
+    // We use currentCount because count is not updated yet
+    var currentCount = count + 1;
+
     if (
-      count < Object.keys(botQuestion).length &&
-      count < Object.keys(userAnswer).length
+      currentCount < Object.keys(botQuestion).length &&
+      currentCount < Object.keys(userAnswer).length
     ) {
-      addChatBotQuestion(botQuestion[count].question + "Total: " + sum);
+      addChatBotQuestion(botQuestion[currentCount].question + "Total: " + sum);
     } else {
       addChatBotQuestion("Total: " + sum);
     }
@@ -141,6 +157,7 @@ function Rightsidepanel() {
           placeholder="Type a message"
           value={newItem}
           onChange={(e) => setNewItem(e.target.value)}
+          onKeyDown={handleKeyDown}
           // autocomplete="off"
           // autofocus="autofocus"
         />
