@@ -1,6 +1,6 @@
 // import "../../App.css";
 import { useState } from "react";
-function Rightsidepanel() {
+function Rightsidepanel({ setUserAnswer, userAnswer }) {
   const [newItem, setNewItem] = useState("");
   const [count, setCount] = useState(0);
 
@@ -11,14 +11,14 @@ function Rightsidepanel() {
     3: { question: "Can you tell me what is 7 x 3 ?", type: 0 },
   };
 
-  var userAnswerInit = {
-    0: { answer: 0 },
-    1: { answer: 0 },
-    2: { answer: 0 },
-    3: { answer: 0 },
-  };
+  // var userAnswerInit = {
+  //   0: { answer: 0 },
+  //   1: { answer: 0 },
+  //   2: { answer: 0 },
+  //   3: { answer: 0 },
+  // };
 
-  const [userAnswer, setUserAnswer] = useState(userAnswerInit);
+  // const [userAnswer, setUserAnswer] = useState(userAnswerInit);
   // var k = 0;
 
   const synth = window.speechSynthesis;
@@ -48,6 +48,7 @@ function Rightsidepanel() {
       setNewItem("");
     }
   }
+
   // document.addEventListener("DOMContentLoaded", () => {
   //   const inputField = document.getElementById("input");
   //   inputField.addEventListener("keydown", function (e) {
@@ -69,7 +70,12 @@ function Rightsidepanel() {
       count < Object.keys(userAnswer).length
     ) {
       // Should be using useState here
-      userAnswer[count].answer = parseInt(input);
+      // userAnswer[count].answer = parseInt(input);
+      // useState version
+      setUserAnswer((userAnswer) => ({
+        ...userAnswer,
+        [count]: { answer: parseInt(input) },
+      }));
     }
     // console.log(userAnswer);
 
@@ -77,12 +83,12 @@ function Rightsidepanel() {
     setCount((count) => count + 1);
 
     /* ********* Adding User Answer *********** */
-    var sum = 0;
+    // var sum = 0;
     // for (property in userAnswer) {
     //   sum += userAnswer[property].answer;
     // }
     /* *** or *** */
-    sum = Object.values(userAnswer).reduce((a, b) => a + b.answer, 0);
+    // sum = Object.values(userAnswer).reduce((a, b) => a + b.answer, 0);
     /* ********** */
 
     /* ********* Adding Ends ****************** */
@@ -94,19 +100,19 @@ function Rightsidepanel() {
       currentCount < Object.keys(botQuestion).length &&
       currentCount < Object.keys(userAnswer).length
     ) {
-      addChatBotQuestion(botQuestion[currentCount].question + "Total: " + sum);
+      addChatBotQuestion(botQuestion[currentCount].question);
     } else {
-      addChatBotQuestion("Total: " + sum);
+      addChatBotQuestion("End of Question");
     }
   }
 
   function addChatBotQuestion(question) {
     const mainDiv = document.getElementById("dialogue-section"); //Added
-    let botDiv = document.createElement("div");
-    botDiv.id = "chatbot";
-    botDiv.classList.add("message");
-    botDiv.innerHTML = `<span id="chatbot-reply">${question}</span>`;
-    mainDiv.appendChild(botDiv);
+    let chatbotDiv = document.createElement("div");
+    chatbotDiv.id = "chatbot";
+    chatbotDiv.classList.add("message");
+    chatbotDiv.innerHTML = `<span id="chatbot-reply">${question}</span>`;
+    mainDiv.appendChild(chatbotDiv);
     var scroll = document.getElementById("dialogue-section");
     scroll.scrollTop = scroll.scrollHeight;
     voiceControl(question);
@@ -114,11 +120,11 @@ function Rightsidepanel() {
 
   function addChatUserAnswer(answer) {
     const mainDiv = document.getElementById("dialogue-section");
-    let userDiv = document.createElement("div");
-    userDiv.id = "user";
-    userDiv.classList.add("message");
-    userDiv.innerHTML = `<span id="user-response">${answer}</span>`;
-    mainDiv.appendChild(userDiv);
+    let appUserDiv = document.createElement("div");
+    appUserDiv.id = "appuser";
+    appUserDiv.classList.add("message");
+    appUserDiv.innerHTML = `<span id="appuser-response">${answer}</span>`;
+    mainDiv.appendChild(appUserDiv);
     var scroll = document.getElementById("dialogue-section"); //Added. It scroll down the chat automatically.
     scroll.scrollTop = scroll.scrollHeight; //Added
   }

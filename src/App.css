@@ -18,7 +18,7 @@
   padding: 8px;
   position: relative;
   margin: 8px 0;
-  max-width: 85%;
+  max-width: 80%;
   word-wrap: break-word;
   z-index: 2;
 }
@@ -30,24 +30,25 @@
   min-height: 24px;
   border: 0.15vw solid #258bd0;
   background-color: #fff;
-  border-radius: 0px 1.5vw 1.5vw 1.8vw;
+  border-radius: 1vw 1vw 1vw 1vw;
   /* padding: 1vw; */
   padding: 8px;
   /* margin: 1.5vw 0; */
   margin: 8px 0;
 }
 
-#user {
+#appuser {
   position: relative;
   bottom: 0;
   min-height: 1.5vw;
   color: #fff;
   padding: 1vw;
   margin: 1.5vw 0;
-  border: 1.5px solid #258bd0;
-  border-radius: 1.5vw 0vw 1.5vw 1.8vw;
-  background-color: #99c9ea;
+  /* border: 3px solid #99c9ea; */
+  border-radius: 1vw 1vw 1vw 1vw;
+  background: linear-gradient(45deg, red, blue);
   float: right;
+  font-weight: 800;
 }
 
 .logo {
