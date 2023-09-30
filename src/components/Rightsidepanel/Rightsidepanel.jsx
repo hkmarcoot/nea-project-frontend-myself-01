@@ -134,17 +134,20 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
   return (
     // <header className="mr-5 w-full h-1/3 bg-light-blue border-2 lg:h-screen lg:w-2/5"></header>
     <div className="w-1/2 bg-light-blue border-2">
-      <div>
-        <button className="mx-6" onClick={() => startAdvisorChat()}>
+      <div className="py-4">
+        <button
+          className="mx-6 md:w-36 lg:w-48"
+          onClick={() => startAdvisorChat()}
+        >
           Start Advisor Chat
         </button>
-        <button className="mx-6" onClick={switchToChatGPT}>
+        <button className="mx-6 md:w-32 lg:w-48" onClick={switchToChatGPT}>
           Switch to ChatGPT
         </button>
       </div>
       <div
         id="dialogue-section"
-        className="h-96 text-left px-2 overflow-y-auto"
+        className="h-72  md:h-96 lg:h-104 text-left px-2 overflow-y-auto"
       >
         <div
           id="chatbot"

@@ -28,7 +28,7 @@ function App() {
         </a>
       </div> */}
       <Header />
-      <div className="flex flex-row justify-center">
+      <div className="flex flex-row justify-center h-136">
         <Leftsidepanel userAnswer={userAnswer} />
         <Rightsidepanel setUserAnswer={setUserAnswer} userAnswer={userAnswer} />
       </div>

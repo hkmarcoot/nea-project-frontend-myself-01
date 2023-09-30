@@ -8,8 +8,13 @@ export default {
   theme: {
     extend: {
       height: {
+        104: "26rem",
+        112: "28rem",
         128: "32rem",
-        168: "34rem",
+        136: "34rem",
+        144: "36rem",
+        152: "38rem",
+        160: "40rem",
       },
     },
     fontFamily: {
