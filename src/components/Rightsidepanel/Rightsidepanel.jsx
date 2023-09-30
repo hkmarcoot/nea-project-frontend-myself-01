@@ -147,7 +147,7 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
       </div>
       <div
         id="dialogue-section"
-        className="h-72  md:h-96 lg:h-104 text-left px-2 overflow-y-auto"
+        className="h-64  md:h-96 lg:h-104 text-left px-2 overflow-y-auto"
       >
         <div
           id="chatbot"
@@ -161,9 +161,10 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
       </div>
       <div id="input-section">
         <input
+          className="w-3/5 min-w-[200px] h-10 border-2"
           id="input"
           type="text"
-          placeholder="Type a message"
+          placeholder=" Start Conversation ..."
           value={newItem}
           onChange={(e) => setNewItem(e.target.value)}
           onKeyDown={handleKeyDown}
