@@ -1,4 +1,4 @@
-function Leftsidepanel({ userAnswer }) {
+function Leftsidepanel({ userAnswer, taxPaid, calculateTaxPaid }) {
   const sum = sumOfUserAnswer();
   // console.log(sum);
   function sumOfUserAnswer() {
@@ -17,7 +17,13 @@ function Leftsidepanel({ userAnswer }) {
       <p>Second Answer: {userAnswer[1].answer}</p>
       <p>Third Answer: {userAnswer[2].answer}</p>
       <p>Last Answer: {userAnswer[3].answer}</p>
-      <p>1</p>
+      <button
+        className="bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded"
+        onClick={() => calculateTaxPaid()}
+      >
+        Calculate TaxPaid
+      </button>
+      <p>TaxPaid: {taxPaid}</p>
       <p>1</p>
       <p>1</p>
       <p>1</p>
