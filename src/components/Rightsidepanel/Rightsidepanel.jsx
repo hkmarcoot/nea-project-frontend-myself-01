@@ -21,17 +21,17 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
   // const [userAnswer, setUserAnswer] = useState(userAnswerInit);
   // var k = 0;
 
-  const synth = window.speechSynthesis;
+  // const synth = window.speechSynthesis;
 
-  function voiceControl(string) {
-    let u = new SpeechSynthesisUtterance(string);
-    u.text = string;
-    u.lang = "en-aus";
-    u.volume = 1;
-    u.rate = 1;
-    u.pitch = 1;
-    synth.speak(u);
-  }
+  // function voiceControl(string) {
+  //   let u = new SpeechSynthesisUtterance(string);
+  //   u.text = string;
+  //   u.lang = "en-aus";
+  //   u.volume = 1;
+  //   u.rate = 1;
+  //   u.pitch = 1;
+  //   synth.speak(u);
+  // }
 
   function sendMessage() {
     // const inputField = document.getElementById("input");
@@ -115,7 +115,7 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
     mainDiv.appendChild(chatbotDiv);
     var scroll = document.getElementById("dialogue-section");
     scroll.scrollTop = scroll.scrollHeight;
-    voiceControl(question);
+    // voiceControl(question);
   }
 
   function addChatUserAnswer(answer) {
@@ -132,7 +132,6 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
   function switchToChatGPT() {}
 
   return (
-    // <header className="mr-5 w-full h-1/3 bg-light-blue border-2 lg:h-screen lg:w-2/5"></header>
     <div className="w-1/2 bg-light-blue border-2">
       <div className="py-4">
         <button
@@ -168,14 +167,9 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
           value={newItem}
           onChange={(e) => setNewItem(e.target.value)}
           onKeyDown={handleKeyDown}
-          // autocomplete="off"
-          // autofocus="autofocus"
         />
         <button className="send" onClick={() => sendMessage()}>
-          <div className="circle">
-            {/* <i class="zmdi zmdi-mail-send"></i> */}
-            Send
-          </div>
+          <div className="circle">Send</div>
         </button>
       </div>
     </div>
