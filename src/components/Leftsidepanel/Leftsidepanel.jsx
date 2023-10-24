@@ -1,4 +1,4 @@
-function Leftsidepanel({ userAnswer, taxPaid, calculateTaxPaid }) {
+function Leftsidepanel({ userIndex, userAnswer, taxPaid, calculateTaxPaid }) {
   const sum = sumOfUserAnswer();
 
   function sumOfUserAnswer() {
@@ -11,6 +11,7 @@ function Leftsidepanel({ userAnswer, taxPaid, calculateTaxPaid }) {
   }
   return (
     <div className="h-136 w-1/2 bg-light-blue border-2 overflow-y-auto">
+      <p>Index: {userIndex}</p>
       <p>This is Left Side Panel. Total: {sum}</p>
       <p>First Answer: {userAnswer[0].answer}</p>
       <p>Second Answer: {userAnswer[1].answer}</p>

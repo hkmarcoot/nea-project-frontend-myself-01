@@ -51,6 +51,29 @@
   font-weight: 800;
 }
 
+.window-modal {
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 1); /* Fallback color*/
+}
+
+.create-user-card {
+  background-color: rgba(239, 172, 49, 0.868);
+  margin: 50px auto;
+  border: 1px solid #ddd;
+  padding: 16px;
+  /* margin: 16px; */
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 80%;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

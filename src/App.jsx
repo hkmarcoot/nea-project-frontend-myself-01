@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
 import Leftsidepanel from "./components/Leftsidepanel/Leftsidepanel";
@@ -8,6 +8,12 @@ import Reportsection from "./components/Reportsection/Reportsection";
 function Taxpayer(newUser = {}) {
   const [name, setName] = useState(newUser.name);
   const [surveyResult, setSurveyResult] = useState([]);
+  const [taxpayerAnswer, setTaxpayerAnswer] = useState({
+    0: { answer: 0 },
+    1: { answer: 0 },
+    2: { answer: 0 },
+    3: { answer: 0 },
+  });
   const [income, setIncome] = useState({});
   const [part1total, setPart1total] = useState(0);
   const [part2total, setPart2total] = useState(0);
@@ -22,7 +28,8 @@ function Taxpayer(newUser = {}) {
   };
   const calculatePart2 = (income) => {};
   const calculateTaxPaid = () => {
-    console.log("Income: " + income);
+    console.log("Hello this is " + name);
+    // console.log("Income hi: " + JSON.stringify(income));
     setTaxPaid(Object.values(income).reduce((a, b) => a + b.answer, 0) + 1000);
   };
 
@@ -31,6 +38,8 @@ function Taxpayer(newUser = {}) {
     setName,
     surveyResult,
     setSurveyResult,
+    taxpayerAnswer,
+    setTaxpayerAnswer,
     income,
     setIncome,
     part1total,
@@ -47,41 +56,71 @@ function Taxpayer(newUser = {}) {
 }
 
 function App() {
-  const user = new Taxpayer({ name: "Marco" });
-  const [userAnswer, setUserAnswer] = useState({
-    0: { answer: 0 },
-    1: { answer: 0 },
-    2: { answer: 0 },
-    3: { answer: 0 },
-  });
-  const [listofUsers, setListofUsers] = useState([]);
-  const [isUserListInit, setIsUserListInit] = useState(false);
+  // Create the first user and add it to the list of users.
+  const firstUser = new Taxpayer({ name: "New User" });
+  // const newUser = new Taxpayer({ name: "Boom" });
+  // const [userAnswer, setUserAnswer] = useState({
+  //   0: { answer: 0 },
+  //   1: { answer: 0 },
+  //   2: { answer: 0 },
+  //   3: { answer: 0 },
+  // });
+  // Start with the first user called "New User"
+  const [listofUsers, setListofUsers] = useState([firstUser]);
+  const [userIndex, setUserIndex] = useState(0);
+  // const [isUserListInit, setIsUserListInit] = useState(false);
 
-  useEffect(() => {
-    if (!isUserListInit) {
-      setListofUsers([user]);
-      // listofUsers.push(user);
-      setIsUserListInit(true);
-    }
-  }, [isUserListInit]);
+  // useEffect(() => {
+  //   if (!isUserListInit) {
+  //     setListofUsers([user]);
+  //     // listofUsers.push(user);
+  //     setIsUserListInit(true);
+  //   }
+  // }, [isUserListInit]);
 
-  useEffect(() => {
-    user.setIncome(userAnswer);
-  }, [userAnswer]);
+  // useEffect(() => {
+  //   user.setIncome(userAnswer);
+  // }, [userAnswer]);
 
-  console.log(user.income);
+  // console.log(newUser.income);
+  // console.log("list: " + JSON.stringify(listofUsers));
+  console.log("Specific user: " + JSON.stringify(listofUsers[userIndex]));
+
+  function createNewUser(newname) {
+    // Create new Taxpayer object cannot be inside createNewUser function
+    // newUser.name = newname;
+    // newUser.setName(newname);
+    const newUser = new Taxpayer({ name: newname });
+    setListofUsers((prevList) => [...prevList, newUser]);
+
+    // Note: The listofUsers is not updated immediately after the setListofUsers() call.
+    // However, the index is listofUsers.length, i.e. first user is index 0.
+    setUserIndex(listofUsers.length);
+  }
+
   console.log("list: " + JSON.stringify(listofUsers));
+  console.log("index: " + userIndex);
 
   return (
     <div className="max-w-6xl mx-auto">
-      <Header listofUsers={listofUsers} />
+      <Header
+        listofUsers={listofUsers}
+        createNewUser={createNewUser}
+        // Taxpayer={Taxpayer}
+        // setListofUsers={setListofUsers}
+        setUserIndex={setUserIndex}
+      />
       <div className="flex flex-row justify-center h-136">
         <Leftsidepanel
-          userAnswer={userAnswer}
-          taxPaid={user.taxPaid}
-          calculateTaxPaid={user.calculateTaxPaid}
+          userIndex={userIndex}
+          userAnswer={listofUsers[0].taxpayerAnswer}
+          taxPaid={listofUsers[0].taxPaid}
+          calculateTaxPaid={listofUsers[userIndex].calculateTaxPaid}
         />
-        <Rightsidepanel setUserAnswer={setUserAnswer} userAnswer={userAnswer} />
+        <Rightsidepanel
+          setUserAnswer={listofUsers[0].setTaxpayerAnswer}
+          userAnswer={listofUsers[0].taxpayerAnswer}
+        />
       </div>
       <Reportsection />
     </div>
