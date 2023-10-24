@@ -1,4 +1,10 @@
-function Leftsidepanel({ userIndex, userAnswer, taxPaid, calculateTaxPaid }) {
+function Leftsidepanel({
+  userIndex,
+  userAnswer,
+  taxPaid,
+  listofUsers,
+  setIsStateUpdated,
+}) {
   const sum = sumOfUserAnswer();
 
   function sumOfUserAnswer() {
@@ -19,33 +25,14 @@ function Leftsidepanel({ userIndex, userAnswer, taxPaid, calculateTaxPaid }) {
       <p>Last Answer: {userAnswer[3].answer}</p>
       <button
         className="bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded"
-        onClick={() => calculateTaxPaid()}
+        onClick={() => {
+          listofUsers[userIndex].calculateTaxPaid();
+          setIsStateUpdated(true);
+        }}
       >
         Calculate TaxPaid
       </button>
       <p>TaxPaid: {taxPaid}</p>
-      {/* <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>2</p> */}
     </div>
   );
 }

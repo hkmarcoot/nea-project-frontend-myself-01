@@ -1,13 +1,7 @@
 import { useState } from "react";
 import UserCard from "../UserCard/UserCard.jsx";
 
-function Header({
-  listofUsers,
-  createNewUser,
-  // Taxpayer,
-  // setListofUsers,
-  setUserIndex,
-}) {
+function Header({ listofUsers, createNewUser, setUserIndex }) {
   const [isAddNewUserCardOpen, setIsAddNewUserCardOpen] = useState(false);
   const [inputName, setInputName] = useState("");
 

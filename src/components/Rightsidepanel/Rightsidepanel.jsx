@@ -1,6 +1,11 @@
 // import "../../App.css";
 import { useState } from "react";
-function Rightsidepanel({ setUserAnswer, userAnswer }) {
+function Rightsidepanel({
+  userIndex,
+  listofUsers,
+  userAnswer,
+  setIsStateUpdated,
+}) {
   const [newItem, setNewItem] = useState("");
   const [count, setCount] = useState(0);
 
@@ -10,28 +15,6 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
     2: { question: "What is 10 / 5 ?", type: 0 },
     3: { question: "Can you tell me what is 7 x 3 ?", type: 0 },
   };
-
-  // var userAnswerInit = {
-  //   0: { answer: 0 },
-  //   1: { answer: 0 },
-  //   2: { answer: 0 },
-  //   3: { answer: 0 },
-  // };
-
-  // const [userAnswer, setUserAnswer] = useState(userAnswerInit);
-  // var k = 0;
-
-  // const synth = window.speechSynthesis;
-
-  // function voiceControl(string) {
-  //   let u = new SpeechSynthesisUtterance(string);
-  //   u.text = string;
-  //   u.lang = "en-aus";
-  //   u.volume = 1;
-  //   u.rate = 1;
-  //   u.pitch = 1;
-  //   synth.speak(u);
-  // }
 
   function sendMessage() {
     // const inputField = document.getElementById("input");
@@ -69,29 +52,14 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
       count < Object.keys(botQuestion).length &&
       count < Object.keys(userAnswer).length
     ) {
-      // Should be using useState here
-      // userAnswer[count].answer = parseInt(input);
-      // useState version
-      setUserAnswer((userAnswer) => ({
-        ...userAnswer,
-        [count]: { answer: parseInt(input) },
-      }));
+      // Change from using useState to calling the method
+      // directly from the list of object
+      listofUsers[userIndex].setTaxpayerAnswer(count, parseInt(input));
+      setIsStateUpdated(true);
     }
-    // console.log(userAnswer);
 
     addChatUserAnswer(input);
     setCount((count) => count + 1);
-
-    /* ********* Adding User Answer *********** */
-    // var sum = 0;
-    // for (property in userAnswer) {
-    //   sum += userAnswer[property].answer;
-    // }
-    /* *** or *** */
-    // sum = Object.values(userAnswer).reduce((a, b) => a + b.answer, 0);
-    /* ********** */
-
-    /* ********* Adding Ends ****************** */
 
     // We use currentCount because count is not updated yet
     var currentCount = count + 1;
@@ -107,7 +75,7 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
   }
 
   function addChatBotQuestion(question) {
-    const mainDiv = document.getElementById("dialogue-section"); //Added
+    const mainDiv = document.getElementById("dialogue-section");
     let chatbotDiv = document.createElement("div");
     chatbotDiv.id = "chatbot";
     chatbotDiv.classList.add("message");
@@ -115,7 +83,6 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
     mainDiv.appendChild(chatbotDiv);
     var scroll = document.getElementById("dialogue-section");
     scroll.scrollTop = scroll.scrollHeight;
-    // voiceControl(question);
   }
 
   function addChatUserAnswer(answer) {
@@ -125,8 +92,8 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
     appUserDiv.classList.add("message");
     appUserDiv.innerHTML = `<span id="appuser-response">${answer}</span>`;
     mainDiv.appendChild(appUserDiv);
-    var scroll = document.getElementById("dialogue-section"); //Added. It scroll down the chat automatically.
-    scroll.scrollTop = scroll.scrollHeight; //Added
+    var scroll = document.getElementById("dialogue-section"); // It scroll down the chat automatically.
+    scroll.scrollTop = scroll.scrollHeight;
   }
 
   function switchToChatGPT() {}
@@ -148,11 +115,7 @@ function Rightsidepanel({ setUserAnswer, userAnswer }) {
         id="dialogue-section"
         className="h-64  md:h-96 lg:h-104 text-left px-2 overflow-y-auto"
       >
-        <div
-          id="chatbot"
-          // className="message relative bottom-0 min-h-[50px] border-solid border-2 border-button-blue rounded-tr-lg rounded-bl-lg rounded-br-lg p-2 my-2"
-          className="message"
-        >
+        <div id="chatbot" className="message">
           <span id="chatbot-reply">
             Please Press 'Start Advisor Chat' button to begin
           </span>
