@@ -7,9 +7,9 @@ function Header({ listofUsers, createNewUser, setUserIndex }) {
 
   return (
     <header className="w-full flex flex-row bg-light-blue border-2">
-      <div className="bg-medium-blue w-3/5">
+      <div className="bg-medium-blue w-3/5 ">
         {listofUsers && (
-          <div className="flex flex-row">
+          <div className="flex flex-row h-full overflow-x-auto">
             {listofUsers.map((data, index) => (
               <UserCard
                 key={index}
@@ -28,40 +28,41 @@ function Header({ listofUsers, createNewUser, setUserIndex }) {
         >
           Add New User
         </button>
-        <button className="px-1 mt-1 mx-1">Import User Data</button>
-        <button className="px-1 my-1 mx-1">Export User Data</button>
+        {/* <button className="px-1 mt-1 mx-1">Import User Data</button>
+        <button className="px-1 my-1 mx-1">Export User Data</button> */}
       </div>
       {isAddNewUserCardOpen ? (
         <div className="window-modal">
-          <div className="create-user-card"></div>
-          <p>
-            <strong>New User Name: </strong>
-            <input
-              className="w-3/5 min-w-[200px] h-10 border-2"
-              id="input"
-              type="text"
-              placeholder=" Name ..."
-              value={inputName}
-              onChange={(e) => setInputName(e.target.value)}
-            ></input>
-          </p>
-          <br />
-          <button
-            className="px-1 mt-1 mx-1"
-            onClick={() => {
-              createNewUser(inputName);
-              setInputName("");
-              setIsAddNewUserCardOpen(false);
-            }}
-          >
-            Create
-          </button>
-          <button
-            className="px-1 mt-1 mx-1"
-            onClick={() => setIsAddNewUserCardOpen(false)}
-          >
-            Cancel
-          </button>
+          <div className="create-user-card">
+            <p>
+              <strong>New User Name: </strong>
+              <input
+                className="w-3/5 min-w-[200px] h-10 border-2"
+                id="input"
+                type="text"
+                placeholder=" Name ..."
+                value={inputName}
+                onChange={(e) => setInputName(e.target.value)}
+              ></input>
+            </p>
+            <br />
+            <button
+              className="px-1 mt-1 mx-1"
+              onClick={() => {
+                createNewUser(inputName);
+                setInputName("");
+                setIsAddNewUserCardOpen(false);
+              }}
+            >
+              Create
+            </button>
+            <button
+              className="px-1 mt-1 mx-1"
+              onClick={() => setIsAddNewUserCardOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       ) : null}
     </header>

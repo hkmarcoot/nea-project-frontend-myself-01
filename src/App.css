@@ -20,7 +20,7 @@
   margin: 8px 0;
   max-width: 80%;
   word-wrap: break-word;
-  z-index: 2;
+  z-index: 1;
 }
 
 #chatbot {
@@ -54,7 +54,7 @@
 .window-modal {
   display: block; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 3; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -72,6 +72,11 @@
   border-radius: 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 80%;
+}
+
+#user-card {
+  position: relative;
+  /* display: block; */
 }
 
 .logo {
