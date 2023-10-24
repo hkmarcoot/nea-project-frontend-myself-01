@@ -4,6 +4,7 @@ import Header from "./components/Header/Header";
 import Leftsidepanel from "./components/Leftsidepanel/Leftsidepanel";
 import Rightsidepanel from "./components/Rightsidepanel/Rightsidepanel";
 import Reportsection from "./components/Reportsection/Reportsection";
+// import { list } from "postcss";
 
 class Taxpayer {
   constructor(newUser = {}) {
@@ -80,6 +81,7 @@ function App() {
         setUserIndex={setUserIndex}
         setIsStateUpdated={setIsStateUpdated}
         userIndex={userIndex}
+        setListofUsers={setListofUsers}
       />
       <div className="flex flex-row justify-center h-136">
         <Leftsidepanel

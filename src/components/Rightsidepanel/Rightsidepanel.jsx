@@ -3,6 +3,7 @@ import { useState } from "react";
 function Rightsidepanel({
   userIndex,
   listofUsers,
+  // setUserAnswer,
   userAnswer,
   setIsStateUpdated,
 }) {

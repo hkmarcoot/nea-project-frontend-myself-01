@@ -7,6 +7,7 @@ function Header({
   setUserIndex,
   setIsStateUpdated,
   userIndex,
+  setListofUsers,
 }) {
   const [isAddNewUserCardOpen, setIsAddNewUserCardOpen] = useState(false);
   const [inputName, setInputName] = useState("");
@@ -25,6 +26,7 @@ function Header({
                 setIsStateUpdated={setIsStateUpdated}
                 listofUsers={listofUsers}
                 userIndex={userIndex}
+                setListofUsers={setListofUsers}
               />
             ))}
           </div>
