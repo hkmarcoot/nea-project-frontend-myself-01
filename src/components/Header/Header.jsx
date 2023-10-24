@@ -1,7 +1,13 @@
 import { useState } from "react";
 import UserCard from "../UserCard/UserCard.jsx";
 
-function Header({ listofUsers, createNewUser, setUserIndex }) {
+function Header({
+  listofUsers,
+  createNewUser,
+  setUserIndex,
+  setIsStateUpdated,
+  userIndex,
+}) {
   const [isAddNewUserCardOpen, setIsAddNewUserCardOpen] = useState(false);
   const [inputName, setInputName] = useState("");
 
@@ -16,6 +22,9 @@ function Header({ listofUsers, createNewUser, setUserIndex }) {
                 index={index}
                 name={data.name}
                 setUserIndex={setUserIndex}
+                setIsStateUpdated={setIsStateUpdated}
+                listofUsers={listofUsers}
+                userIndex={userIndex}
               />
             ))}
           </div>

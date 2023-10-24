@@ -78,6 +78,8 @@ function App() {
         listofUsers={listofUsers}
         createNewUser={createNewUser}
         setUserIndex={setUserIndex}
+        setIsStateUpdated={setIsStateUpdated}
+        userIndex={userIndex}
       />
       <div className="flex flex-row justify-center h-136">
         <Leftsidepanel
