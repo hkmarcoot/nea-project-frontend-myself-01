@@ -27,7 +27,7 @@ function Header({
     document.body.removeChild(link);
   }
 
-  function jsonFileUpload(e) {
+  function jsonFileUpload() {
     const fileReader = new FileReader();
     fileReader.readAsText(importFileName, "UTF-8");
     fileReader.onload = (e) => {
