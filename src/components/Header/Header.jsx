@@ -14,7 +14,7 @@ function Header({
   const [inputName, setInputName] = useState("");
   const [importFileName, setImportFileName] = useState("");
 
-  const jsonFileDownload = () => {
+  function jsonFileDownload() {
     const json_data = listofUsers;
     const fileName = "newfilename.json";
     const data = new Blob([JSON.stringify(json_data)], { type: "text/json" });
@@ -25,9 +25,9 @@ function Header({
     link.setAttribute("download", fileName);
     link.click();
     document.body.removeChild(link);
-  };
+  }
 
-  const jsonFileUpload = (e) => {
+  function jsonFileUpload(e) {
     const fileReader = new FileReader();
     fileReader.readAsText(importFileName, "UTF-8");
     fileReader.onload = (e) => {
@@ -44,7 +44,7 @@ function Header({
         );
       }
     };
-  };
+  }
 
   return (
     <header className="w-full flex flex-row bg-light-blue border-2">
