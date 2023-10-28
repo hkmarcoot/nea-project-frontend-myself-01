@@ -2,7 +2,7 @@ export default function UserCard({
   index,
   name,
   setUserIndex,
-  setIsStateUpdated,
+  // setIsStateUpdated,
   listofUsers,
   userIndex,
   setListofUsers,

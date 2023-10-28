@@ -9,17 +9,17 @@ import Reportsection from "./components/Reportsection/Reportsection";
 class Taxpayer {
   constructor(newUser = {}) {
     this.name = newUser.name || "";
-    this.surveyResult = [];
-    this.taxpayerAnswer = {
+    this.surveyResult = newUser.surveyResult || [];
+    this.taxpayerAnswer = newUser.taxpayerAnswer || {
       0: { answer: 0 },
       1: { answer: 0 },
       2: { answer: 0 },
       3: { answer: 0 },
     };
-    this.income = {};
-    this.part1total = 0;
-    this.part2total = 0;
-    this.taxPaid = 0;
+    this.income = newUser.income || {};
+    this.part1total = newUser.part1total || 0;
+    this.part2total = newUser.part2total || 0;
+    this.taxPaid = newUser.taxPaid || 0;
   }
 
   setTaxpayerIncome(answer) {
@@ -60,8 +60,24 @@ function App() {
     }
   }, [isStateUpdated]);
 
-  function createNewUser(newname) {
-    const newUser = new Taxpayer({ name: newname });
+  function createNewUser(
+    newname,
+    surveyResult,
+    taxpayerAnswer,
+    income,
+    part1total,
+    part2total,
+    taxPaid
+  ) {
+    const newUser = new Taxpayer({
+      name: newname,
+      surveyResult: surveyResult,
+      taxpayerAnswer: taxpayerAnswer,
+      income: income,
+      part1total: part1total,
+      part2total: part2total,
+      taxPaid: taxPaid,
+    });
     setListofUsers((prevList) => [...prevList, newUser]);
     // Note: The listofUsers is not updated immediately after the setListofUsers() call.
     // However, the index is listofUsers.length, i.e. first user is index 0.
@@ -79,7 +95,7 @@ function App() {
         listofUsers={listofUsers}
         createNewUser={createNewUser}
         setUserIndex={setUserIndex}
-        setIsStateUpdated={setIsStateUpdated}
+        // setIsStateUpdated={setIsStateUpdated}
         userIndex={userIndex}
         setListofUsers={setListofUsers}
       />

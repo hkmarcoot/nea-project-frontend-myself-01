@@ -5,12 +5,46 @@ function Header({
   listofUsers,
   createNewUser,
   setUserIndex,
-  setIsStateUpdated,
+  // setIsStateUpdated,
   userIndex,
   setListofUsers,
 }) {
   const [isAddNewUserCardOpen, setIsAddNewUserCardOpen] = useState(false);
+  const [isImportUserCardOpen, setIsImportUserCardOpen] = useState(false);
   const [inputName, setInputName] = useState("");
+  const [importFileName, setImportFileName] = useState("");
+
+  const jsonFileDownload = () => {
+    const json_data = listofUsers;
+    const fileName = "newfilename.json";
+    const data = new Blob([JSON.stringify(json_data)], { type: "text/json" });
+    const jsonURL = window.URL.createObjectURL(data);
+    const link = document.createElement("a");
+    document.body.appendChild(link);
+    link.href = jsonURL;
+    link.setAttribute("download", fileName);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const jsonFileUpload = (e) => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(importFileName, "UTF-8");
+    fileReader.onload = (e) => {
+      const data = JSON.parse(e.target.result);
+      for (var i = 0; i < data.length; i++) {
+        createNewUser(
+          data[i].name,
+          data[i].surveyResult,
+          data[i].taxpayerAnswer,
+          data[i].income,
+          data[i].part1total,
+          data[i].part2total,
+          data[i].taxPaid
+        );
+      }
+    };
+  };
 
   return (
     <header className="w-full flex flex-row bg-light-blue border-2">
@@ -23,7 +57,7 @@ function Header({
                 index={index}
                 name={data.name}
                 setUserIndex={setUserIndex}
-                setIsStateUpdated={setIsStateUpdated}
+                // setIsStateUpdated={setIsStateUpdated}
                 listofUsers={listofUsers}
                 userIndex={userIndex}
                 setListofUsers={setListofUsers}
@@ -39,12 +73,20 @@ function Header({
         >
           Add New User
         </button>
-        {/* <button className="px-1 mt-1 mx-1">Import User Data</button>
-        <button className="px-1 my-1 mx-1">Export User Data</button> */}
+        <button
+          className="px-1 mt-1 mx-1"
+          onClick={() => setIsImportUserCardOpen(true)}
+        >
+          Import User Data
+        </button>
+        <button className="px-1 my-1" onClick={jsonFileDownload}>
+          Export User Data
+        </button>
       </div>
       {isAddNewUserCardOpen ? (
         <div className="window-modal">
           <div className="create-user-card">
+            <h2>Add New User</h2>
             <p>
               <strong>New User Name: </strong>
               <input
@@ -70,6 +112,33 @@ function Header({
             <button
               className="px-1 mt-1 mx-1"
               onClick={() => setIsAddNewUserCardOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : null}
+      {isImportUserCardOpen ? (
+        <div className="window-modal">
+          <div className="import-user-card">
+            <h2>Upload & Import User JSON File</h2>
+            <input
+              type="file"
+              onChange={(e) => {
+                setImportFileName(e.target.files[0]);
+              }}
+            />
+            <button
+              onClick={() => {
+                jsonFileUpload();
+                setIsImportUserCardOpen(false);
+              }}
+            >
+              Submit
+            </button>
+            <button
+              className="ml-1"
+              onClick={() => setIsImportUserCardOpen(false)}
             >
               Cancel
             </button>
