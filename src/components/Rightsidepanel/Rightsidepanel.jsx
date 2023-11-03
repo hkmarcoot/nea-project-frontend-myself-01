@@ -6,16 +6,38 @@ function Rightsidepanel({
   // setUserAnswer,
   userAnswer,
   setIsStateUpdated,
+  stage,
+  setStage,
+  count,
+  setCount,
+  botQuestion,
+  addChatBotQuestion,
 }) {
   const [newItem, setNewItem] = useState("");
-  const [count, setCount] = useState(0);
+  // const [stage, setStage] = useState(0);
+  // const [count, setCount] = useState(0);
 
-  const botQuestion = {
-    0: { question: "This is the first question, what is 3 + 4 ?", type: 0 },
-    1: { question: "Second question: what is 5 - 2 ?", type: 0 },
-    2: { question: "What is 10 / 5 ?", type: 0 },
-    3: { question: "Can you tell me what is 7 x 3 ?", type: 0 },
-  };
+  // const botQuestion = [
+  //   [
+  //     {
+  //       question: "Welcome new user! Please enter your name: ",
+  //       answerType: "string",
+  //     },
+  //   ],
+  //   [
+  //     {
+  //       question:
+  //         "Which day did you arrive UK? Please answer the question in the form MM/DD/YYYY.",
+  //       answerType: "string",
+  //     },
+  //   ],
+  //   [
+  //     { question: "First question: what is 3 + 4 ?", type: 0 },
+  //     { question: "Second question: what is 5 - 2 ?", type: 0 },
+  //     { question: "What is 10 / 5 ?", type: 0 },
+  //     { question: "Can you tell me what is 7 x 3 ?", type: 0 },
+  //   ],
+  // ];
 
   function sendMessage() {
     // const inputField = document.getElementById("input");
@@ -33,58 +55,106 @@ function Rightsidepanel({
     }
   }
 
-  // document.addEventListener("DOMContentLoaded", () => {
-  //   const inputField = document.getElementById("input");
-  //   inputField.addEventListener("keydown", function (e) {
-  //     if (e.code === "Enter") {
-  //       let input = inputField.value.trim();
-  //       input !== "" && output(input);
-  //       inputField.value = "";
-  //     }
-  //   });
-  // });
+  // Find the question index as if the botQuestion is a flat array
+  function findQuestionIndex(stage, count) {
+    var result = 0;
+    // Add the number of questions in the previous stage
+    for (var i = 0; i < stage; i++) {
+      // if (i === 0) {
+      //   result += botQuestion[0].length;
+      // } else if (i === 1) {
+      //   result += botQuestion[1].length;
+      // }
+      result += botQuestion[i].length;
+    }
+    return result + count;
+  }
 
   function startAdvisorChat() {
-    addChatBotQuestion(botQuestion[0].question);
+    if (listofUsers[userIndex].name === "New User") {
+      addChatBotQuestion(botQuestion[0][0].question);
+    } else {
+      addChatBotQuestion(botQuestion[1][0].question);
+    }
   }
 
   function output(input) {
     if (
-      count < Object.keys(botQuestion).length &&
-      count < Object.keys(userAnswer).length
+      // Check if the index is still within the range of the botQuestion
+      findQuestionIndex(stage, count) < [...botQuestion.flat(Infinity)].length
+      // currentCount < Object.keys(botQuestion).length &&
+      // count < Object.keys(userAnswer).length
     ) {
-      // Change from using useState to calling the method
-      // directly from the list of object
-      listofUsers[userIndex].setTaxpayerAnswer(count, parseInt(input));
-      setIsStateUpdated(true);
+      if (stage === 0 && count === 0) {
+        listofUsers[userIndex].setName(input);
+      } else if (stage === 1 && count === 0) {
+        listofUsers[userIndex].setSurveyResult(count, input);
+        listofUsers[userIndex].setSurveyResultStatus(count, "answered");
+      } else if (stage === 2 && count >= 0) {
+        // Change from using useState to calling the method
+        // directly from the list of object
+        // console.log("stage: " + stage + ", count: " + count);
+        // console.log("Start with: " + findQuestionIndex(stage, count));
+        listofUsers[userIndex].setTaxpayerAnswer(count, parseInt(input));
+        listofUsers[userIndex].setTaxpayerAnswerStatus(count, "answered");
+      }
     }
-
+    // Update the state of the listofUsers
+    setIsStateUpdated(true);
+    // Display the User's answer on the Chat
     addChatUserAnswer(input);
-    setCount((count) => count + 1);
-
-    // We use currentCount because count is not updated yet
-    var currentCount = count + 1;
+    // Apply the stage and count index numbering logic
+    if (
+      // Check if the user is new and the surveyResult is pending
+      listofUsers[userIndex].getSurveyResultStatus() === "pending"
+    ) {
+      // Set the stage and count to 1 and 0 respectively
+      setStage(1);
+      setCount(0);
+      // We use currentStage and currentCount because
+      // stage & count state are not updated yet
+      // inside the function.
+      var currentStage = 1;
+      var currentCount = 0;
+    } else if (!listofUsers[userIndex].isAllTaxpayerAnswerStatusIsAnswered()) {
+      // Check which question is still pending in stage 2
+      for (var i = 0; i < botQuestion[2].length; i++) {
+        if (listofUsers[userIndex].getTaxpayerAnswerStatus(i) === "pending") {
+          setStage(2);
+          setCount(i);
+          currentStage = 2;
+          currentCount = i;
+          break;
+        }
+      }
+    }
 
     if (
-      currentCount < Object.keys(botQuestion).length &&
-      currentCount < Object.keys(userAnswer).length
+      // End the chat when the index reach the last question
+      // findQuestionIndex(stage, count) <
+      // [...botQuestion.flat(Infinity)].length - 1
+      // currentCount < Object.keys(botQuestion).length &&
+      // currentCount < Object.keys(userAnswer).length
+      listofUsers[userIndex].getSurveyResultStatus() === "answered" &&
+      listofUsers[userIndex].isAllTaxpayerAnswerStatusIsAnswered()
     ) {
-      addChatBotQuestion(botQuestion[currentCount].question);
-    } else {
+      // console.log("End with: " + findQuestionIndex(stage, count));
       addChatBotQuestion("End of Question");
+    } else {
+      addChatBotQuestion(botQuestion[currentStage][currentCount].question);
     }
   }
 
-  function addChatBotQuestion(question) {
-    const mainDiv = document.getElementById("dialogue-section");
-    let chatbotDiv = document.createElement("div");
-    chatbotDiv.id = "chatbot";
-    chatbotDiv.classList.add("message");
-    chatbotDiv.innerHTML = `<span id="chatbot-reply">${question}</span>`;
-    mainDiv.appendChild(chatbotDiv);
-    var scroll = document.getElementById("dialogue-section");
-    scroll.scrollTop = scroll.scrollHeight;
-  }
+  // function addChatBotQuestion(question) {
+  //   const mainDiv = document.getElementById("dialogue-section");
+  //   let chatbotDiv = document.createElement("div");
+  //   chatbotDiv.id = "chatbot";
+  //   chatbotDiv.classList.add("message");
+  //   chatbotDiv.innerHTML = `<span id="chatbot-reply">${question}</span>`;
+  //   mainDiv.appendChild(chatbotDiv);
+  //   var scroll = document.getElementById("dialogue-section");
+  //   scroll.scrollTop = scroll.scrollHeight;
+  // }
 
   function addChatUserAnswer(answer) {
     const mainDiv = document.getElementById("dialogue-section");

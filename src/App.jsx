@@ -9,12 +9,14 @@ import Reportsection from "./components/Reportsection/Reportsection";
 class Taxpayer {
   constructor(newUser = {}) {
     this.name = newUser.name || "";
-    this.surveyResult = newUser.surveyResult || [];
+    this.surveyResult = newUser.surveyResult || {
+      0: { status: "pending", answer: "" },
+    };
     this.taxpayerAnswer = newUser.taxpayerAnswer || {
-      0: { answer: 0 },
-      1: { answer: 0 },
-      2: { answer: 0 },
-      3: { answer: 0 },
+      0: { status: "pending", answer: 0 },
+      1: { status: "pending", answer: 0 },
+      2: { status: "pending", answer: 0 },
+      3: { status: "pending", answer: 0 },
     };
     this.income = newUser.income || {};
     this.part1total = newUser.part1total || 0;
@@ -39,8 +41,43 @@ class Taxpayer {
     this.taxPaid = sum;
   }
 
+  setName(answer) {
+    this.name = answer;
+  }
+
+  setSurveyResult(questionNumber, answer) {
+    this.surveyResult[questionNumber].answer = answer;
+  }
+
+  getSurveyResultStatus() {
+    return this.surveyResult[0].status;
+  }
+
+  setSurveyResultStatus(questionNumber, status) {
+    this.surveyResult[questionNumber].status = status;
+  }
+
   setTaxpayerAnswer(questionNumber, answer) {
     this.taxpayerAnswer[questionNumber].answer = answer;
+  }
+
+  getTaxpayerAnswerStatus(questionNumber) {
+    return this.taxpayerAnswer[questionNumber].status;
+  }
+
+  setTaxpayerAnswerStatus(questionNumber, status) {
+    this.taxpayerAnswer[questionNumber].status = status;
+  }
+
+  isAllTaxpayerAnswerStatusIsAnswered() {
+    var isAllAnswered = true;
+    for (var i = 0; i < Object.keys(this.taxpayerAnswer).length; i++) {
+      if (this.taxpayerAnswer[i].status === "pending") {
+        isAllAnswered = false;
+        break;
+      }
+    }
+    return isAllAnswered;
   }
 }
 
@@ -51,6 +88,30 @@ function App() {
   const [listofUsers, setListofUsers] = useState([firstUser]);
   const [userIndex, setUserIndex] = useState(0);
   const [isStateUpdated, setIsStateUpdated] = useState(false);
+  const [stage, setStage] = useState(0);
+  const [count, setCount] = useState(0);
+
+  const botQuestion = [
+    [
+      {
+        question: "Welcome new user! Please enter your name: ",
+        answerType: "string",
+      },
+    ],
+    [
+      {
+        question:
+          "Which day did you arrive UK? Please answer the question in the form MM/DD/YYYY.",
+        answerType: "string",
+      },
+    ],
+    [
+      { question: "First question: what is 3 + 4 ?", type: 0 },
+      { question: "Second question: what is 5 - 2 ?", type: 0 },
+      { question: "What is 10 / 5 ?", type: 0 },
+      { question: "Can you tell me what is 7 x 3 ?", type: 0 },
+    ],
+  ];
 
   // This useEffect is to trigger re-renders when the listofUsers is updated.
   useEffect(() => {
@@ -84,6 +145,17 @@ function App() {
     setUserIndex(listofUsers.length);
   }
 
+  function addChatBotQuestion(question) {
+    const mainDiv = document.getElementById("dialogue-section");
+    let chatbotDiv = document.createElement("div");
+    chatbotDiv.id = "chatbot";
+    chatbotDiv.classList.add("message");
+    chatbotDiv.innerHTML = `<span id="chatbot-reply">${question}</span>`;
+    mainDiv.appendChild(chatbotDiv);
+    var scroll = document.getElementById("dialogue-section");
+    scroll.scrollTop = scroll.scrollHeight;
+  }
+
   // console.log("Specific user: " + JSON.stringify(listofUsers[userIndex]));
   console.log("list: " + JSON.stringify(listofUsers));
   // console.log("index: " + userIndex);
@@ -102,11 +174,16 @@ function App() {
       <div className="flex flex-row justify-center h-136">
         <Leftsidepanel
           userIndex={userIndex}
+          userSurveyResult={listofUsers[userIndex].surveyResult}
           userAnswer={listofUsers[userIndex].taxpayerAnswer}
           taxPaid={listofUsers[userIndex].taxPaid}
           // calculateTaxPaid={listofUsers[userIndex].calculateTaxPaid}
           listofUsers={listofUsers}
           setIsStateUpdated={setIsStateUpdated}
+          setStage={setStage}
+          setCount={setCount}
+          botQuestion={botQuestion}
+          addChatBotQuestion={addChatBotQuestion}
         />
         <Rightsidepanel
           userIndex={userIndex}
@@ -114,6 +191,12 @@ function App() {
           // setUserAnswer={listofUsers[0].setTaxpayerAnswer}
           userAnswer={listofUsers[userIndex].taxpayerAnswer}
           setIsStateUpdated={setIsStateUpdated}
+          stage={stage}
+          setStage={setStage}
+          count={count}
+          setCount={setCount}
+          botQuestion={botQuestion}
+          addChatBotQuestion={addChatBotQuestion}
         />
       </div>
       <Reportsection />
