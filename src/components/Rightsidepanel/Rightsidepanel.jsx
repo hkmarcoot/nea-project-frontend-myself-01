@@ -3,41 +3,14 @@ import { useState } from "react";
 function Rightsidepanel({
   userIndex,
   listofUsers,
-  // setUserAnswer,
-  userAnswer,
   setIsStateUpdated,
   stage,
-  setStage,
   count,
-  setCount,
   botQuestion,
   addChatBotQuestion,
+  findNextQuestionAndAsk,
 }) {
   const [newItem, setNewItem] = useState("");
-  // const [stage, setStage] = useState(0);
-  // const [count, setCount] = useState(0);
-
-  // const botQuestion = [
-  //   [
-  //     {
-  //       question: "Welcome new user! Please enter your name: ",
-  //       answerType: "string",
-  //     },
-  //   ],
-  //   [
-  //     {
-  //       question:
-  //         "Which day did you arrive UK? Please answer the question in the form MM/DD/YYYY.",
-  //       answerType: "string",
-  //     },
-  //   ],
-  //   [
-  //     { question: "First question: what is 3 + 4 ?", type: 0 },
-  //     { question: "Second question: what is 5 - 2 ?", type: 0 },
-  //     { question: "What is 10 / 5 ?", type: 0 },
-  //     { question: "Can you tell me what is 7 x 3 ?", type: 0 },
-  //   ],
-  // ];
 
   function sendMessage() {
     // const inputField = document.getElementById("input");
@@ -103,58 +76,10 @@ function Rightsidepanel({
     setIsStateUpdated(true);
     // Display the User's answer on the Chat
     addChatUserAnswer(input);
-    // Apply the stage and count index numbering logic
-    if (
-      // Check if the user is new and the surveyResult is pending
-      listofUsers[userIndex].getSurveyResultStatus() === "pending"
-    ) {
-      // Set the stage and count to 1 and 0 respectively
-      setStage(1);
-      setCount(0);
-      // We use currentStage and currentCount because
-      // stage & count state are not updated yet
-      // inside the function.
-      var currentStage = 1;
-      var currentCount = 0;
-    } else if (!listofUsers[userIndex].isAllTaxpayerAnswerStatusIsAnswered()) {
-      // Check which question is still pending in stage 2
-      for (var i = 0; i < botQuestion[2].length; i++) {
-        if (listofUsers[userIndex].getTaxpayerAnswerStatus(i) === "pending") {
-          setStage(2);
-          setCount(i);
-          currentStage = 2;
-          currentCount = i;
-          break;
-        }
-      }
-    }
 
-    if (
-      // End the chat when the index reach the last question
-      // findQuestionIndex(stage, count) <
-      // [...botQuestion.flat(Infinity)].length - 1
-      // currentCount < Object.keys(botQuestion).length &&
-      // currentCount < Object.keys(userAnswer).length
-      listofUsers[userIndex].getSurveyResultStatus() === "answered" &&
-      listofUsers[userIndex].isAllTaxpayerAnswerStatusIsAnswered()
-    ) {
-      // console.log("End with: " + findQuestionIndex(stage, count));
-      addChatBotQuestion("End of Question");
-    } else {
-      addChatBotQuestion(botQuestion[currentStage][currentCount].question);
-    }
+    // Go the findNextQuestionAndAsk() procedure
+    findNextQuestionAndAsk(userIndex);
   }
-
-  // function addChatBotQuestion(question) {
-  //   const mainDiv = document.getElementById("dialogue-section");
-  //   let chatbotDiv = document.createElement("div");
-  //   chatbotDiv.id = "chatbot";
-  //   chatbotDiv.classList.add("message");
-  //   chatbotDiv.innerHTML = `<span id="chatbot-reply">${question}</span>`;
-  //   mainDiv.appendChild(chatbotDiv);
-  //   var scroll = document.getElementById("dialogue-section");
-  //   scroll.scrollTop = scroll.scrollHeight;
-  // }
 
   function addChatUserAnswer(answer) {
     const mainDiv = document.getElementById("dialogue-section");

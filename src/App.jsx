@@ -90,6 +90,7 @@ function App() {
   const [isStateUpdated, setIsStateUpdated] = useState(false);
   const [stage, setStage] = useState(0);
   const [count, setCount] = useState(0);
+  const [isImport, setIsImport] = useState(false);
 
   const botQuestion = [
     [
@@ -140,9 +141,25 @@ function App() {
       taxPaid: taxPaid,
     });
     setListofUsers((prevList) => [...prevList, newUser]);
-    // Note: The listofUsers is not updated immediately after the setListofUsers() call.
-    // However, the index is listofUsers.length, i.e. first user is index 0.
-    setUserIndex(listofUsers.length);
+
+    // If create new user is not from import
+    // ask first question when the user is created
+    if (!isImport) {
+      // Note: The listofUsers is not updated immediately after the setListofUsers() call.
+      // However, the index is listofUsers.length, i.e. first user is index 0.
+      setUserIndex(listofUsers.length);
+      // Set stage and count to be 1 and 0 respectively
+      // so that the answer from user can be recorded
+      setStage(1);
+      setCount(0);
+      // Ask the first question
+      addChatBotQuestion("Hello " + newname + "!");
+      addChatBotQuestion(botQuestion[1][0].question);
+    } else {
+      // If create new user is from import,
+      // tell the user that the data is imported
+      addChatBotQuestion("User data imported.");
+    }
   }
 
   function addChatBotQuestion(question) {
@@ -156,6 +173,46 @@ function App() {
     scroll.scrollTop = scroll.scrollHeight;
   }
 
+  // This subroutine is a procedure used by the Rightsidepanel and the UserCard in Header
+  function findNextQuestionAndAsk(index) {
+    // Apply the stage and count index numbering logic
+    if (
+      // Check if the user is new and the surveyResult is pending
+      listofUsers[index].getSurveyResultStatus() === "pending"
+    ) {
+      // Set the stage and count to 1 and 0 respectively
+      setStage(1);
+      setCount(0);
+      // We use currentStage and currentCount because
+      // stage & count state are not updated yet
+      // inside the function.
+      var currentStage = 1;
+      var currentCount = 0;
+    } else if (!listofUsers[index].isAllTaxpayerAnswerStatusIsAnswered()) {
+      // Check which question is still pending in stage 2
+      for (var i = 0; i < botQuestion[2].length; i++) {
+        if (listofUsers[index].getTaxpayerAnswerStatus(i) === "pending") {
+          setStage(2);
+          setCount(i);
+          currentStage = 2;
+          currentCount = i;
+          break;
+        }
+      }
+    }
+
+    if (
+      // End the chat when the all question answered
+      listofUsers[index].getSurveyResultStatus() === "answered" &&
+      listofUsers[index].isAllTaxpayerAnswerStatusIsAnswered()
+    ) {
+      // console.log("End with: " + findQuestionIndex(stage, count));
+      addChatBotQuestion("End of Question");
+    } else {
+      addChatBotQuestion(botQuestion[currentStage][currentCount].question);
+    }
+  }
+
   // console.log("Specific user: " + JSON.stringify(listofUsers[userIndex]));
   console.log("list: " + JSON.stringify(listofUsers));
   // console.log("index: " + userIndex);
@@ -167,9 +224,10 @@ function App() {
         listofUsers={listofUsers}
         createNewUser={createNewUser}
         setUserIndex={setUserIndex}
-        // setIsStateUpdated={setIsStateUpdated}
         userIndex={userIndex}
         setListofUsers={setListofUsers}
+        findNextQuestionAndAsk={findNextQuestionAndAsk}
+        setIsImport={setIsImport}
       />
       <div className="flex flex-row justify-center h-136">
         <Leftsidepanel
@@ -177,7 +235,6 @@ function App() {
           userSurveyResult={listofUsers[userIndex].surveyResult}
           userAnswer={listofUsers[userIndex].taxpayerAnswer}
           taxPaid={listofUsers[userIndex].taxPaid}
-          // calculateTaxPaid={listofUsers[userIndex].calculateTaxPaid}
           listofUsers={listofUsers}
           setIsStateUpdated={setIsStateUpdated}
           setStage={setStage}
@@ -188,15 +245,12 @@ function App() {
         <Rightsidepanel
           userIndex={userIndex}
           listofUsers={listofUsers}
-          // setUserAnswer={listofUsers[0].setTaxpayerAnswer}
-          userAnswer={listofUsers[userIndex].taxpayerAnswer}
           setIsStateUpdated={setIsStateUpdated}
           stage={stage}
-          setStage={setStage}
           count={count}
-          setCount={setCount}
           botQuestion={botQuestion}
           addChatBotQuestion={addChatBotQuestion}
+          findNextQuestionAndAsk={findNextQuestionAndAsk}
         />
       </div>
       <Reportsection />

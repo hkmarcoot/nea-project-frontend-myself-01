@@ -20,16 +20,7 @@ function Leftsidepanel({
     // return sum;
     return Object.values(userAnswer).reduce((a, b) => a + b.answer, 0);
   }
-  function addChatBotQuestion(question) {
-    const mainDiv = document.getElementById("dialogue-section");
-    let chatbotDiv = document.createElement("div");
-    chatbotDiv.id = "chatbot";
-    chatbotDiv.classList.add("message");
-    chatbotDiv.innerHTML = `<span id="chatbot-reply">${question}</span>`;
-    mainDiv.appendChild(chatbotDiv);
-    var scroll = document.getElementById("dialogue-section");
-    scroll.scrollTop = scroll.scrollHeight;
-  }
+
   return (
     <div className="h-136 w-1/2 bg-light-blue border-2 overflow-y-auto">
       <p>Index: {userIndex}</p>

@@ -6,6 +6,7 @@ export default function UserCard({
   listofUsers,
   userIndex,
   setListofUsers,
+  findNextQuestionAndAsk,
 }) {
   function handleDeleteUser() {
     if (listofUsers.length > 1) {
@@ -28,7 +29,10 @@ export default function UserCard({
       <div
         id="user-card"
         className=" cursor-pointer px-8 min-w-40 flex flex-col justify-between items-center"
-        onClick={() => setUserIndex(index)}
+        onClick={() => {
+          setUserIndex(index);
+          findNextQuestionAndAsk(index);
+        }}
       >
         {/* <p>index: {index}</p> */}
         {index === userIndex ? (

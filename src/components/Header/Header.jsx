@@ -5,9 +5,10 @@ function Header({
   listofUsers,
   createNewUser,
   setUserIndex,
-  // setIsStateUpdated,
   userIndex,
   setListofUsers,
+  findNextQuestionAndAsk,
+  setIsImport,
 }) {
   const [isAddNewUserCardOpen, setIsAddNewUserCardOpen] = useState(false);
   const [isImportUserCardOpen, setIsImportUserCardOpen] = useState(false);
@@ -44,6 +45,8 @@ function Header({
         );
       }
     };
+    // Set isImport back to false
+    setIsImport(false);
   }
 
   return (
@@ -61,6 +64,7 @@ function Header({
                 listofUsers={listofUsers}
                 userIndex={userIndex}
                 setListofUsers={setListofUsers}
+                findNextQuestionAndAsk={findNextQuestionAndAsk}
               />
             ))}
           </div>
@@ -75,7 +79,11 @@ function Header({
         </button>
         <button
           className="px-1 mt-1 mx-1"
-          onClick={() => setIsImportUserCardOpen(true)}
+          onClick={() => {
+            setIsImportUserCardOpen(true);
+            // Set isImport to true so that the createNewUser() will not ask the first question
+            setIsImport(true);
+          }}
         >
           Import User Data
         </button>
@@ -132,13 +140,19 @@ function Header({
               onClick={() => {
                 jsonFileUpload();
                 setIsImportUserCardOpen(false);
+                // Set isImport back to false
+                setIsImport(false);
               }}
             >
               Submit
             </button>
             <button
               className="ml-1"
-              onClick={() => setIsImportUserCardOpen(false)}
+              onClick={() => {
+                setIsImportUserCardOpen(false);
+                // Set isImport back to false
+                setIsImport(false);
+              }}
             >
               Cancel
             </button>
