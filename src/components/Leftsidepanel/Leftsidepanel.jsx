@@ -33,12 +33,28 @@ function Leftsidepanel({
   return (
     <div className="h-136 w-1/2 bg-light-blue border-2 overflow-y-auto">
       <p>Index: {userIndex}</p>
-      <p>Username: {listofUsers[userIndex].name}</p>
+      <p
+        className="hover:font-bold hover:cursor-pointer hover:bg-medium-blue"
+        onClick={() => {
+          setStage(0);
+          setCount(0);
+          addChatBotQuestion(botQuestion[0][0].question);
+        }}
+      >
+        Username: {listofUsers[userIndex].name}
+      </p>
       {userSurveyResult[0].status === "answered" ? (
-        <p>Arrive Date: {userSurveyResult[0].answer}</p>
+        <p
+          className="hover:font-bold hover:cursor-pointer hover:bg-medium-blue"
+          onClick={() => {
+            setStage(1);
+            setCount(0);
+            addChatBotQuestion(botQuestion[1][0].question);
+          }}
+        >
+          Arrive Date: {userSurveyResult[0].answer}
+        </p>
       ) : null}
-
-      <p>Total: {sum}</p>
       {userAnswer[0].status === "answered" ? (
         <p
           className="hover:font-bold hover:cursor-pointer hover:bg-medium-blue"
@@ -87,7 +103,7 @@ function Leftsidepanel({
           Last Answer: {userAnswer[3].answer}
         </p>
       ) : null}
-
+      <p>Total value of answers: {sum}</p>
       <button
         className="bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded"
         onClick={() => {
