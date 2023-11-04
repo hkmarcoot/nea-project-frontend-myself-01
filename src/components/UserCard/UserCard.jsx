@@ -10,10 +10,16 @@ export default function UserCard({
 }) {
   function handleDeleteUser() {
     if (listofUsers.length > 1) {
+      // If the user is the first one in the list,
+      // keep the index at 0 after deleting the first user
       if (userIndex === 0) {
         setUserIndex(0);
+        // Ask question to the next user
+        findNextQuestionAndAsk(0);
       } else {
         setUserIndex(index - 1);
+        // Ask question to the next user
+        findNextQuestionAndAsk(index - 1);
       }
 
       // Delete user from listofUsers
@@ -46,7 +52,7 @@ export default function UserCard({
           <button
             className="py-0 px-1 mb-1"
             onClick={() => {
-              setUserIndex(0);
+              // setUserIndex(0);
               handleDeleteUser();
             }}
           >

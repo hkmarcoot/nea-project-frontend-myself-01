@@ -46,7 +46,7 @@ function Header({
       }
     };
     // Set isImport back to false
-    setIsImport(false);
+    // setIsImport(false);
   }
 
   return (
@@ -60,7 +60,6 @@ function Header({
                 index={index}
                 name={data.name}
                 setUserIndex={setUserIndex}
-                // setIsStateUpdated={setIsStateUpdated}
                 listofUsers={listofUsers}
                 userIndex={userIndex}
                 setListofUsers={setListofUsers}
