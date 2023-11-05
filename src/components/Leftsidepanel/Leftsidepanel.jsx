@@ -35,16 +35,29 @@ function Leftsidepanel({
         Username: {listofUsers[userIndex].name}
       </p>
       {userSurveyResult[0].status === "answered" ? (
-        <p
-          className="hover:font-bold hover:cursor-pointer hover:bg-medium-blue"
-          onClick={() => {
-            setStage(1);
-            setCount(0);
-            addChatBotQuestion(botQuestion[1][0].question);
-          }}
-        >
-          Arrive Date: {userSurveyResult[0].answer}
-        </p>
+        <>
+          <p
+            className="hover:font-bold hover:cursor-pointer hover:bg-medium-blue"
+            onClick={() => {
+              setStage(1);
+              setCount(0);
+              addChatBotQuestion(botQuestion[1][0].question);
+              // Reset question 2, 3 and result in the surveyResult botQuestion
+              listofUsers[userIndex].setSurveyResultBackToInitial(1);
+              listofUsers[userIndex].setSurveyResultBackToInitial(2);
+              listofUsers[userIndex].setSurveyResultBackToInitial(3);
+            }}
+          >
+            Arrive Date: {userSurveyResult[0].answer}
+          </p>
+          <p>
+            Number of Days From Arrival:{" "}
+            {listofUsers[userIndex].numOfDaysFromArrival}
+          </p>
+        </>
+      ) : null}
+      {userSurveyResult[3].status === "answered" ? (
+        <p>Resident State: {userSurveyResult[3].answer}</p>
       ) : null}
       {userAnswer[0].status === "answered" ? (
         <p

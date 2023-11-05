@@ -52,6 +52,8 @@ function Rightsidepanel({
   }
 
   function output(input) {
+    var booleanTrue = ["yes", "y", "true", "t"];
+    var booleanFalse = ["no", "n", "false", "f"];
     if (
       // Check if the index is still within the range of the botQuestion
       findQuestionIndex(stage, count) < [...botQuestion.flat(Infinity)].length
@@ -63,6 +65,30 @@ function Rightsidepanel({
       } else if (stage === 1 && count === 0) {
         listofUsers[userIndex].setSurveyResult(count, input);
         listofUsers[userIndex].setSurveyResultStatus(count, "answered");
+        listofUsers[userIndex].checkValidDateFormat(input);
+        listofUsers[userIndex].calculateNumOfDaysFromArrival(input);
+        // If the user have spent 183 or more days in the UK,
+        // set the user's residency to be a UK resident
+        if (listofUsers[userIndex].numOfDaysFromArrival >= 183) {
+          listofUsers[userIndex].setSurveyResult(3, "User is a UK resident");
+          listofUsers[userIndex].setSurveyResultStatus(3, "answered");
+        }
+        // Reset question 2 and 3 in the surveyResult botQuestion
+        listofUsers[userIndex].setSurveyResultBackToInitial(1);
+        listofUsers[userIndex].setSurveyResultBackToInitial(2);
+      } else if ((stage === 1 && count === 1) || (stage === 1 && count === 2)) {
+        if (booleanTrue.includes(input.toLowerCase())) {
+          listofUsers[userIndex].setSurveyResult(count, true);
+          listofUsers[userIndex].setSurveyResultStatus(count, "answered");
+          listofUsers[userIndex].setSurveyResult(3, "User is a UK resident");
+        } else if (booleanFalse.includes(input.toLowerCase())) {
+          listofUsers[userIndex].setSurveyResult(count, false);
+          listofUsers[userIndex].setSurveyResultStatus(count, "answered");
+        } else {
+          // Set the answer to undefined if the user input is not yes or no
+          // Keep the status as pending
+          listofUsers[userIndex].setSurveyResult(count, "undefined");
+        }
       } else if (stage === 2 && count >= 0) {
         // Change from using useState to calling the method
         // directly from the list of object
