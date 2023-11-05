@@ -195,6 +195,8 @@ function App() {
     }
   }, [isStateUpdated]);
 
+  // This function is to create a new user and add it to the list of users.
+  // It also perform action immidately after the user is created or is from the importing.
   function createNewUser(
     newname,
     surveyResult,
@@ -247,7 +249,9 @@ function App() {
     var scroll = document.getElementById("dialogue-section");
     scroll.scrollTop = scroll.scrollHeight;
   }
-
+  // This function find the start date 183 days after the arrival date.
+  // However, if the start date is sooner than the start of the tax year,
+  // It will return the start date of the tax year instead.
   function findStartDateOfTaxYear(input) {
     var arrivalDate = new Date(input);
     var startDateOfTaxYear = new Date("04/06/2022");
@@ -272,6 +276,10 @@ function App() {
     }
   }
 
+  // According to the script, the input would only be
+  // on or after the start date 04/06/2022
+  // Hence the function below can skip checking whether
+  // the input is before the start date or not
   function isStartDateWithinTaxYear2022To2023(input) {
     // var startDateOfTaxYear = new Date("04/06/2022");
     var EndDateOfTaxYear = new Date("04/05/2023");
