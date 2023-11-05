@@ -129,7 +129,7 @@ class Taxpayer {
     this.taxpayerAnswer[questionNumber].status = status;
   }
 
-  isAllTaxpayerAnswerStatusIsAnswered() {
+  isAllTaxpayerAnswerStatusAnswered() {
     var isAllAnswered = true;
     for (var i = 0; i < Object.keys(this.taxpayerAnswer).length; i++) {
       if (this.taxpayerAnswer[i].status === "pending") {
@@ -442,9 +442,9 @@ function App() {
       listofUsers[index].setSurveyResultStatusToAllAnswered();
       // Set all status in taxpayerAnswer to skipped
       // so that all taxpayerAnswer is not marked as pending
-      // hence passing the isAllTaxpayerAnswerStatusIsAnswered() check
+      // hence passing the isAllTaxpayerAnswerStatusAnswered() check
       listofUsers[index].setTaxpayerAnswerStatusToAllSkipped();
-    } else if (!listofUsers[index].isAllTaxpayerAnswerStatusIsAnswered()) {
+    } else if (!listofUsers[index].isAllTaxpayerAnswerStatusAnswered()) {
       // Check which question is still pending in stage 2
       for (var i = 0; i < botQuestion[2].length; i++) {
         if (listofUsers[index].getTaxpayerAnswerStatus(i) === "pending") {
@@ -460,7 +460,7 @@ function App() {
     if (
       // End the chat when the all question answered
       listofUsers[index].getSurveyResultStatus() === "answered" &&
-      listofUsers[index].isAllTaxpayerAnswerStatusIsAnswered()
+      listofUsers[index].isAllTaxpayerAnswerStatusAnswered()
     ) {
       // console.log("End with: " + findQuestionIndex(stage, count));
       addChatBotQuestion("End of Question");
