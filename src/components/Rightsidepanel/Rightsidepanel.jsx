@@ -84,6 +84,12 @@ function Rightsidepanel({
         } else if (booleanFalse.includes(input.toLowerCase())) {
           listofUsers[userIndex].setSurveyResult(count, false);
           listofUsers[userIndex].setSurveyResultStatus(count, "answered");
+          if (stage === 1 && count === 2) {
+            listofUsers[userIndex].setSurveyResult(
+              3,
+              "User is a non-resident in the UK"
+            );
+          }
         } else {
           // Set the answer to undefined if the user input is not yes or no
           // Keep the status as pending
