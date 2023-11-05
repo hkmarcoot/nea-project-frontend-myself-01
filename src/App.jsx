@@ -177,7 +177,10 @@ function App() {
       },
     ],
     [
-      { question: "How much you earn from being in employment?", type: 0 },
+      {
+        question: "How much you earn from being in employment?",
+        answerType: "floatNumber",
+      },
       { question: "Second question: what is 5 - 2 ?", type: 0 },
       { question: "What is 10 / 5 ?", type: 0 },
       { question: "Can you tell me what is 7 x 3 ?", type: 0 },
@@ -295,15 +298,28 @@ function App() {
         addChatBotQuestion(
           "You are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
         );
-        addChatBotQuestion(
-          "I have created a file for the tax year 2022/2023 for you. Now please enter your income starting on " +
-            startDateOfTaxYear +
-            " and ending on " +
-            endDateOfTaxYear +
-            ". " +
-            startDateOfTaxYear +
-            " is the date 183 days after your arrival date."
-        );
+        // If findStartDateOfTaxYear() return the date of the start of tax year, which is 04/06/2022
+        if (startDateOfTaxYear === "04/06/2022") {
+          addChatBotQuestion(
+            "I have created a file for the tax year 2022/2023 for you. Now please enter your income starting on " +
+              startDateOfTaxYear +
+              " and ending on " +
+              endDateOfTaxYear +
+              ". " +
+              startDateOfTaxYear +
+              " is the start date of the tax year 2022/2023."
+          );
+        } else {
+          addChatBotQuestion(
+            "I have created a file for the tax year 2022/2023 for you. Now please enter your income starting on " +
+              startDateOfTaxYear +
+              " and ending on " +
+              endDateOfTaxYear +
+              ". " +
+              startDateOfTaxYear +
+              " is the date 183 days after your arrival date."
+          );
+        }
         addChatBotQuestion(
           "We will start with calculating your non-saving income..."
         );
