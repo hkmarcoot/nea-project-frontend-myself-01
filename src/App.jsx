@@ -481,11 +481,13 @@ function App() {
       addChatBotQuestion(
         "You only have to pay tax on your UK income and do not have to pay tax on your forgein income. Income includes things like: pension, rental income, savings interest and wages"
       );
-      // Normally users who are not a UK resident can stop the calculation
-      // because they do not need to pay forgein tax,
-      // which is the most concerning part for new immigrant,
-      // and their UK income from employment in the UK have been taxed by company already,
-      // which means they do not need to fill in self-assessment for the 183 days after arrival.
+      /* Notes:
+          Normally users who are not a UK resident can stop the calculation
+          because they do not need to pay forgein tax,
+          which is the most concerning part for new immigrant,
+          and their UK income from employment in the UK have been taxed by company already,
+          which means they do not need to fill in self-assessment for the 183 days after arrival.
+      */
 
       // Set all status in surveyResult to answered
       listofUsers[index].setSurveyResultStatusToAllAnswered();
