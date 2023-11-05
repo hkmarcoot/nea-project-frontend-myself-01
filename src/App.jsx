@@ -293,7 +293,7 @@ function App() {
       listofUsers[index].numOfDaysFromArrival >= 183 &&
       listofUsers[index].surveyResult[1].status === "pending" &&
       listofUsers[index].surveyResult[2].status === "pending"
-      // Commend out checking the result's status since it is 'answered'
+      // Comment out checking the result's status since it is 'answered'
       // when number of days is 183 days or more
       // listofUsers[index].surveyResult[3].status === "pending"
     ) {
