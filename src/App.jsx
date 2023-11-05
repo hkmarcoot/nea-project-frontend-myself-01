@@ -69,13 +69,13 @@ class Taxpayer {
   }
 
   setSurveyResultStatusToAllAnswered() {
-    this.surveyResult[0].status = "answered";
-    this.surveyResult[1].status = "answered";
-    this.surveyResult[2].status = "answered";
-    this.surveyResult[3].status = "answered";
-    // for (var i = 0; i < Object.keys(this.surveyResult).length; i++) {
-    //   this.surveyResult[i].status = "answered";
-    // }
+    // this.surveyResult[0].status = "answered";
+    // this.surveyResult[1].status = "answered";
+    // this.surveyResult[2].status = "answered";
+    // this.surveyResult[3].status = "answered";
+    for (var i = 0; i < Object.keys(this.surveyResult).length; i++) {
+      this.surveyResult[i].status = "answered";
+    }
   }
 
   setTaxpayerAnswerStatusToAllSkipped() {
