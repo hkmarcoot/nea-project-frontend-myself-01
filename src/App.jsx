@@ -259,6 +259,7 @@ function App() {
       arrivalDate.getTime() + 183 * (1000 * 3600 * 24)
     );
     var timeDiff = DateAfter183Days.getTime() - startDateOfTaxYear.getTime();
+    // This function add '0' in front of the month or date if it is a single digit
     function formatMonthOrDate(input) {
       if (input.toString().length === 1) {
         return "0" + input;
