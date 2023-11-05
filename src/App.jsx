@@ -263,7 +263,7 @@ function App() {
       var currentCount = 0;
     } else if (listofUsers[index].surveyResult[0].isValid === false) {
       addChatBotQuestion(
-        "Please enter the date in the form MM/DD/YYYY. For example, 11/30/2022."
+        "Please enter the date in the format MM/DD/YYYY. For example, 11/30/2022."
       );
       // Clear the invalid date input
       listofUsers[index].setSurveyResultBackToInitial(0);
@@ -276,7 +276,7 @@ function App() {
       // Situation for number of days from arrival is negative
       listofUsers[index].numOfDaysFromArrival < 0
     ) {
-      addChatBotQuestion("Please enter a date before today.");
+      addChatBotQuestion("Please enter a date on or before today.");
       // Set the stage and count to 1 and 0 respectively
       setStage(1);
       setCount(0);
@@ -301,7 +301,7 @@ function App() {
         "Since you have been in UK for 183 days or more, you are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
       );
       addChatBotQuestion(
-        "I have created a file for the tax year 2023/2024 for you. Now please enter your income for the tax year 2023/2024."
+        "I have created a file for the tax year 2022/2023 for you. Now please enter your income for the tax year 2022/2023."
       );
       addChatBotQuestion(
         "We will start with calculating your non-saving income..."
@@ -362,7 +362,7 @@ function App() {
         "You are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
       );
       addChatBotQuestion(
-        "I have created a file for the tax year 2023/2024 for you. Now please enter your income for the tax year 2023/2024."
+        "I have created a file for the tax year 2022/2023 for you. Now please enter your income for the tax year 2022/2023."
       );
       addChatBotQuestion(
         "We will start with calculating your non-saving income..."
@@ -414,7 +414,7 @@ function App() {
         "You are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
       );
       addChatBotQuestion(
-        "I have created a file for the tax year 2023/2024 for you. Now please enter your income for the tax year 2023/2024."
+        "I have created a file for the tax year 2022/2023 for you. Now please enter your income for the tax year 2022/2023."
       );
       addChatBotQuestion(
         "We will start with calculating your non-saving income..."
