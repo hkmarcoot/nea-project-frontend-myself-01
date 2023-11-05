@@ -411,6 +411,7 @@ function App() {
       listofUsers[index].surveyResult[2].status === "pending"
       // Comment out checking the result's status since it is 'answered'
       // when number of days is 183 days or more
+      // which means the condition is not fulfilled and the code below will not be executed
       // listofUsers[index].surveyResult[3].status === "pending"
     ) {
       addChatBotQuestion(
