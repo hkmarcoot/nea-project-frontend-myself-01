@@ -43,6 +43,14 @@ function Rightsidepanel({
     return result + count;
   }
 
+  function isContainDollarSign(input) {
+    return input.includes("$") || input.includes("£");
+  }
+
+  function removeDollarSign(input) {
+    return input.replace("$", "").replace("£", "");
+  }
+
   function startAdvisorChat() {
     if (listofUsers[userIndex].name === "New User") {
       addChatBotQuestion(botQuestion[0][0].question);
@@ -100,7 +108,10 @@ function Rightsidepanel({
         // directly from the list of object
         // console.log("stage: " + stage + ", count: " + count);
         // console.log("Start with: " + findQuestionIndex(stage, count));
-        listofUsers[userIndex].setTaxpayerAnswer(count, parseInt(input));
+        if (isContainDollarSign(input)) {
+          input = removeDollarSign(input);
+        }
+        listofUsers[userIndex].setTaxpayerAnswer(count, parseFloat(input));
         listofUsers[userIndex].setTaxpayerAnswerStatus(count, "answered");
       }
     }

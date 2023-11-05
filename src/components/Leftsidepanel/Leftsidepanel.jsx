@@ -68,7 +68,7 @@ function Leftsidepanel({
             addChatBotQuestion(botQuestion[2][0].question);
           }}
         >
-          First Answer: {userAnswer[0].answer}
+          First Answer: £{userAnswer[0].answer}
         </p>
       ) : null}
       {userAnswer[1].status === "answered" ? (
@@ -80,7 +80,7 @@ function Leftsidepanel({
             addChatBotQuestion(botQuestion[2][1].question);
           }}
         >
-          Second Answer: {userAnswer[1].answer}
+          Second Answer: £{userAnswer[1].answer}
         </p>
       ) : null}
       {userAnswer[2].status === "answered" ? (
@@ -92,7 +92,7 @@ function Leftsidepanel({
             addChatBotQuestion(botQuestion[2][2].question);
           }}
         >
-          Third Answer: {userAnswer[2].answer}
+          Third Answer: £{userAnswer[2].answer}
         </p>
       ) : null}
       {userAnswer[3].status === "answered" ? (
@@ -104,7 +104,7 @@ function Leftsidepanel({
             addChatBotQuestion(botQuestion[2][3].question);
           }}
         >
-          Last Answer: {userAnswer[3].answer}
+          Last Answer: £{userAnswer[3].answer}
         </p>
       ) : null}
       <p>Total value of answers: {sum}</p>

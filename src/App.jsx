@@ -177,7 +177,7 @@ function App() {
       },
     ],
     [
-      { question: "First question: what is 3 + 4 ?", type: 0 },
+      { question: "How much you earn from being in employment?", type: 0 },
       { question: "Second question: what is 5 - 2 ?", type: 0 },
       { question: "What is 10 / 5 ?", type: 0 },
       { question: "Can you tell me what is 7 x 3 ?", type: 0 },
@@ -245,9 +245,100 @@ function App() {
     scroll.scrollTop = scroll.scrollHeight;
   }
 
-  // This subroutine is a procedure used by the Rightsidepanel and the UserCard in Header
+  function findStartDateOfTaxYear(input) {
+    var arrivalDate = new Date(input);
+    var startDateOfTaxYear = new Date("04/06/2022");
+    var DateAfter183Days = new Date(
+      arrivalDate.getTime() + 183 * (1000 * 3600 * 24)
+    );
+    var timeDiff = DateAfter183Days.getTime() - startDateOfTaxYear.getTime();
+    function formatMonthOrDate(input) {
+      if (input.toString().length === 1) {
+        return "0" + input;
+      } else {
+        return input;
+      }
+    }
+    var month = formatMonthOrDate(DateAfter183Days.getMonth() + 1);
+    var date = formatMonthOrDate(DateAfter183Days.getDate());
+    var year = DateAfter183Days.getFullYear();
+    if (timeDiff < 0) {
+      return "04/06/2022";
+    } else {
+      return month + "/" + date + "/" + year;
+    }
+  }
 
+  function isStartDateWithinTaxYear2022To2023(input) {
+    // var startDateOfTaxYear = new Date("04/06/2022");
+    var EndDateOfTaxYear = new Date("04/05/2023");
+    var inputDate = new Date(input);
+    // var timeDiffWithStartDate = inputDate.getTime() - startDateOfTaxYear.getTime();
+    var timeDiffWithEndDate = inputDate.getTime() - EndDateOfTaxYear.getTime();
+
+    if (timeDiffWithEndDate > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // This subroutine is a procedure used by the Rightsidepanel and the UserCard in Header
   function findNextQuestionAndAsk(index) {
+    // ****** Function that reuses the code ****** //
+    function classifiedAsUKResidentAndCheckStartDate() {
+      var startDateOfTaxYear = findStartDateOfTaxYear(
+        listofUsers[index].surveyResult[0].answer
+      );
+      var endDateOfTaxYear = "04/05/2023";
+      if (isStartDateWithinTaxYear2022To2023(startDateOfTaxYear)) {
+        addChatBotQuestion(
+          "You are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
+        );
+        addChatBotQuestion(
+          "I have created a file for the tax year 2022/2023 for you. Now please enter your income starting on " +
+            startDateOfTaxYear +
+            " and ending on " +
+            endDateOfTaxYear +
+            ". " +
+            startDateOfTaxYear +
+            " is the date 183 days after your arrival date."
+        );
+        addChatBotQuestion(
+          "We will start with calculating your non-saving income..."
+        );
+
+        // Set all status in surveyResult to answered
+        listofUsers[index].setSurveyResultStatusToAllAnswered();
+        // Set the stage and count to 2 and 0 respectively
+        setStage(2);
+        setCount(0);
+        currentStage = 2;
+        currentCount = 0;
+      } else {
+        addChatBotQuestion(
+          "You are classified as a UK resident. However, you do not need to pay UK tax in the tax year 2022-2023."
+        );
+        addChatBotQuestion(
+          "It is because the date 183 days after your arrival date, which is on " +
+            startDateOfTaxYear +
+            ", is after the end of the tax year 2022-2023, which is on " +
+            endDateOfTaxYear +
+            "."
+        );
+        // Ending the conversation with the user
+
+        // Set all status in surveyResult to answered
+        listofUsers[index].setSurveyResultStatusToAllAnswered();
+        // Set all status in taxpayerAnswer to skipped
+        // so that all taxpayerAnswer is not marked as pending
+        // hence passing the isAllTaxpayerAnswerStatusAnswered() check
+        listofUsers[index].setTaxpayerAnswerStatusToAllSkipped();
+      }
+    }
+
+    // ****** Function that reuses the code end ******//
+
     // Apply the stage and count index numbering logic
     if (
       // Check if the user is new and the surveyResult is pending
@@ -298,22 +389,57 @@ function App() {
       // listofUsers[index].surveyResult[3].status === "pending"
     ) {
       addChatBotQuestion(
-        "Since you have been in UK for 183 days or more, you are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
+        "You have been in UK for 183 days or more. As a result ..."
       );
-      addChatBotQuestion(
-        "I have created a file for the tax year 2022/2023 for you. Now please enter your income for the tax year 2022/2023."
-      );
-      addChatBotQuestion(
-        "We will start with calculating your non-saving income..."
-      );
-      addChatBotQuestion("First if");
-      // Set all status in surveyResult to answered
-      listofUsers[index].setSurveyResultStatusToAllAnswered();
-      // Set the stage and count to 2 and 0 respectively
-      setStage(2);
-      setCount(0);
-      currentStage = 2;
-      currentCount = 0;
+      classifiedAsUKResidentAndCheckStartDate();
+      // var startDateOfTaxYear = findStartDateOfTaxYear(
+      //   listofUsers[index].surveyResult[0].answer
+      // );
+      // var endDateOfTaxYear = "04/05/2023";
+      // if (isStartDateWithinTaxYear2022To2023(startDateOfTaxYear)) {
+      //   addChatBotQuestion(
+      //     "Since you have been in UK for 183 days or more, you are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
+      //   );
+      //   addChatBotQuestion(
+      //     "I have created a file for the tax year 2022/2023 for you. Now please enter your income starting on " +
+      //       startDateOfTaxYear +
+      //       " and ending on " +
+      //       endDateOfTaxYear +
+      //       ". " +
+      //       startDateOfTaxYear +
+      //       " is the date 183 days after your arrival date."
+      //   );
+      //   addChatBotQuestion(
+      //     "We will start with calculating your non-saving income..."
+      //   );
+      //   addChatBotQuestion("First if");
+      //   // Set all status in surveyResult to answered
+      //   listofUsers[index].setSurveyResultStatusToAllAnswered();
+      //   // Set the stage and count to 2 and 0 respectively
+      //   setStage(2);
+      //   setCount(0);
+      //   currentStage = 2;
+      //   currentCount = 0;
+      // } else {
+      //   addChatBotQuestion(
+      //     "Although you have been in UK for 183 days or more, and you are classified as a UK resident, you do not need to pay UK tax in the tax year 2022-2023."
+      //   );
+      //   addChatBotQuestion(
+      //     "It is because the date 183 days after your arrival date, which is on " +
+      //       startDateOfTaxYear +
+      //       ", is after the end of the tax year 2022-2023, which is on " +
+      //       endDateOfTaxYear +
+      //       "."
+      //   );
+      //   // Ending the conversation with the user
+
+      //   // Set all status in surveyResult to answered
+      //   listofUsers[index].setSurveyResultStatusToAllAnswered();
+      //   // Set all status in taxpayerAnswer to skipped
+      //   // so that all taxpayerAnswer is not marked as pending
+      //   // hence passing the isAllTaxpayerAnswerStatusAnswered() check
+      //   listofUsers[index].setTaxpayerAnswerStatusToAllSkipped();
+      // }
     } else if (
       // Situation for number of days from arrival is less than 183
       // and question 1 and 2 are pending
@@ -358,23 +484,55 @@ function App() {
       listofUsers[index].surveyResult[1].answer === true &&
       listofUsers[index].surveyResult[2].status === "pending"
     ) {
-      addChatBotQuestion(
-        "You are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
-      );
-      addChatBotQuestion(
-        "I have created a file for the tax year 2022/2023 for you. Now please enter your income for the tax year 2022/2023."
-      );
-      addChatBotQuestion(
-        "We will start with calculating your non-saving income..."
-      );
-      addChatBotQuestion("Second if");
-      // Set all status in surveyResult to answered
-      listofUsers[index].setSurveyResultStatusToAllAnswered();
-      // Set the stage and count to 2 and 0 respectively
-      setStage(2);
-      setCount(0);
-      currentStage = 2;
-      currentCount = 0;
+      classifiedAsUKResidentAndCheckStartDate();
+      // var startDateOfTaxYear = findStartDateOfTaxYear(
+      //   listofUsers[index].surveyResult[0].answer
+      // );
+      // var endDateOfTaxYear = "04/05/2023";
+      // if (isStartDateWithinTaxYear2022To2023(startDateOfTaxYear)) {
+      //   addChatBotQuestion(
+      //     "You are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
+      //   );
+      //   addChatBotQuestion(
+      //     "I have created a file for the tax year 2022/2023 for you. Now please enter your income starting on " +
+      //       startDateOfTaxYear +
+      //       " and ending on " +
+      //       endDateOfTaxYear +
+      //       ". " +
+      //       startDateOfTaxYear +
+      //       " is the date 183 days after your arrival date."
+      //   );
+      //   addChatBotQuestion(
+      //     "We will start with calculating your non-saving income..."
+      //   );
+      //   addChatBotQuestion("Second if");
+      //   // Set all status in surveyResult to answered
+      //   listofUsers[index].setSurveyResultStatusToAllAnswered();
+      //   // Set the stage and count to 2 and 0 respectively
+      //   setStage(2);
+      //   setCount(0);
+      //   currentStage = 2;
+      //   currentCount = 0;
+      // } else {
+      //   addChatBotQuestion(
+      //     "You are classified as a UK resident, you do not need to pay UK tax in the tax year 2022-2023."
+      //   );
+      //   addChatBotQuestion(
+      //     "It is because the date 183 days after your arrival date, which is on " +
+      //       startDateOfTaxYear +
+      //       ", is after the end of the tax year 2022-2023, which is on " +
+      //       endDateOfTaxYear +
+      //       "."
+      //   );
+      //   // Ending the conversation with the user
+
+      //   // Set all status in surveyResult to answered
+      //   listofUsers[index].setSurveyResultStatusToAllAnswered();
+      //   // Set all status in taxpayerAnswer to skipped
+      //   // so that all taxpayerAnswer is not marked as pending
+      //   // hence passing the isAllTaxpayerAnswerStatusAnswered() check
+      //   listofUsers[index].setTaxpayerAnswerStatusToAllSkipped();
+      // }
     } else if (
       // Situation for the user answers false in 1st question
       listofUsers[index].numOfDaysFromArrival < 183 &&
@@ -410,23 +568,34 @@ function App() {
       listofUsers[index].surveyResult[2].answer === true &&
       listofUsers[index].surveyResult[3].status === "pending"
     ) {
-      addChatBotQuestion(
-        "You are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
-      );
-      addChatBotQuestion(
-        "I have created a file for the tax year 2022/2023 for you. Now please enter your income for the tax year 2022/2023."
-      );
-      addChatBotQuestion(
-        "We will start with calculating your non-saving income..."
-      );
-      addChatBotQuestion("Third if");
-      // Set all status in surveyResult to answered
-      listofUsers[index].setSurveyResultStatusToAllAnswered();
-      // Set the stage and count to 2 and 0 respectively
-      setStage(2);
-      setCount(0);
-      currentStage = 2;
-      currentCount = 0;
+      classifiedAsUKResidentAndCheckStartDate();
+      // startDateOfTaxYear = findStartDateOfTaxYear(
+      //   listofUsers[index].surveyResult[0].answer
+      // );
+      // endDateOfTaxYear = "04/05/2023";
+      // addChatBotQuestion(
+      //   "You are a UK resident, and you need to pay UK tax on all your income, whether it’s from the UK or abroad."
+      // );
+      // addChatBotQuestion(
+      //   "I have created a file for the tax year 2022/2023 for you. Now please enter your income starting on " +
+      //     startDateOfTaxYear +
+      //     " and ending on " +
+      //     endDateOfTaxYear +
+      //     ". " +
+      //     startDateOfTaxYear +
+      //     " is the date 183 days after your arrival date."
+      // );
+      // addChatBotQuestion(
+      //   "We will start with calculating your non-saving income..."
+      // );
+      // addChatBotQuestion("Third if");
+      // // Set all status in surveyResult to answered
+      // listofUsers[index].setSurveyResultStatusToAllAnswered();
+      // // Set the stage and count to 2 and 0 respectively
+      // setStage(2);
+      // setCount(0);
+      // currentStage = 2;
+      // currentCount = 0;
     } else if (
       // Situation for the user answers false in 2st question
       listofUsers[index].numOfDaysFromArrival < 183 &&
