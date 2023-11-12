@@ -103,7 +103,7 @@ function Rightsidepanel({
           // Keep the status as pending
           listofUsers[userIndex].setSurveyResult(count, "undefined");
         }
-      } else if (stage === 2 && count >= 0) {
+      } else if ((stage === 2 && count <= 4) || (stage === 2 && count >= 6)) {
         // Change from using useState to calling the method
         // directly from the list of object
         // console.log("stage: " + stage + ", count: " + count);
@@ -113,6 +113,41 @@ function Rightsidepanel({
         }
         listofUsers[userIndex].setTaxpayerAnswer(count, parseFloat(input));
         listofUsers[userIndex].setTaxpayerAnswerStatus(count, "answered");
+      } else if (stage === 2 && count === 5) {
+        // Change from using useState to calling the method
+        // directly from the list of object
+        // console.log("stage: " + stage + ", count: " + count);
+        // console.log("Start with: " + findQuestionIndex(stage, count));
+
+        if (booleanTrue.includes(input.toLowerCase())) {
+          listofUsers[userIndex].setTaxpayerAnswer(count, true);
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count, "answered");
+          // Reset the status of the next 5 questions to be pending
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count + 1, "pending");
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count + 2, "pending");
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count + 3, "pending");
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count + 4, "pending");
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count + 5, "pending");
+        } else if (booleanFalse.includes(input.toLowerCase())) {
+          listofUsers[userIndex].setTaxpayerAnswer(count, false);
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count, "answered");
+          // Set the status of the next 5 questions to be skipped
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count + 1, "skipped");
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count + 2, "skipped");
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count + 3, "skipped");
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count + 4, "skipped");
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count + 5, "skipped");
+          // Reset the values to be 0 if the user answer 'No'
+          listofUsers[userIndex].setTaxpayerAnswer(count + 1, 0);
+          listofUsers[userIndex].setTaxpayerAnswer(count + 2, 0);
+          listofUsers[userIndex].setTaxpayerAnswer(count + 3, 0);
+          listofUsers[userIndex].setTaxpayerAnswer(count + 4, 0);
+          listofUsers[userIndex].setTaxpayerAnswer(count + 5, 0);
+        } else {
+          // Set the answer to undefined if the user input is not yes or no
+          // Keep the status as pending
+          listofUsers[userIndex].setTaxpayerAnswer(count, "undefined");
+        }
       }
     }
     // Update the state of the listofUsers

@@ -35,10 +35,77 @@ class Taxpayer {
       },
     };
     this.taxpayerAnswer = newUser.taxpayerAnswer || {
-      0: { status: "pending", answer: 0 },
-      1: { status: "pending", answer: 0 },
-      2: { status: "pending", answer: 0 },
-      3: { status: "pending", answer: 0 },
+      0: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from being in employment in the UK",
+      },
+      1: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from being self-employed excluding foregin income",
+      },
+      2: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from freelance work",
+      },
+      3: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from pensions in the UK",
+      },
+      4: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from local rental income",
+      },
+      5: {
+        status: "pending",
+        answer: "",
+        description: "A boolean whether the user has foreign income or not",
+      },
+      6: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from oversea company",
+      },
+      7: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from job outside the UK",
+      },
+      8: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from oversea interest",
+      },
+      9: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from oversea dividend",
+      },
+      10: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from oversea rental income",
+      },
+      11: {
+        status: "pending",
+        answer: 0,
+        description:
+          "Pension contributions made through your employer's pension scheme",
+      },
+      12: {
+        status: "pending",
+        answer: 0,
+        description: "Qualifying loan interest payments",
+      },
+      13: {
+        status: "pending",
+        answer: 0,
+        description: "Qualifying gifts to charities",
+      },
     };
     this.numOfDaysFromArrival = newUser.numOfDaysFromArrival || 0;
     this.income = newUser.income || {};
@@ -95,9 +162,11 @@ class Taxpayer {
   // calculatePart2(income) {}
 
   calculateTaxPaid() {
-    var sum =
-      Object.values(this.taxpayerAnswer).reduce((a, b) => a + b.answer, 0) +
-      1000;
+    var newArr = [
+      ...Object.values(this.taxpayerAnswer).slice(0, 5),
+      ...Object.values(this.taxpayerAnswer).slice(6),
+    ];
+    var sum = newArr.reduce((a, b) => a + b.answer, 0) + 1000;
     this.taxPaid = sum;
   }
 
@@ -178,12 +247,54 @@ function App() {
     ],
     [
       {
-        question: "How much you earn from being in employment?",
+        question: "How much you earn from being in employment in the UK?",
         answerType: "floatNumber",
       },
-      { question: "Second question: what is 5 - 2 ?", type: 0 },
-      { question: "What is 10 / 5 ?", type: 0 },
-      { question: "Can you tell me what is 7 x 3 ?", type: 0 },
+      {
+        question:
+          "How much you earn from being self-employed excluding the foreign income?",
+        answerType: "floatNumber",
+      },
+      {
+        question: "How much you earn from freelance work?",
+        answerType: "floatNumber",
+      },
+      {
+        question: "How much you earn from pensions in the UK?",
+        answerType: "floatNumber",
+      },
+      {
+        question:
+          "How much you earn from rental income, where the properties are in the UK? (Please add together your rental incomes and deduct any expenses.)",
+        answerType: "floatNumber",
+      },
+      {
+        question:
+          "Do you have any foregin income? Any income that generated outside the UK is counted as foregin income, which includes: Profit generated from your company outside the UK, interest from overseas bank, dividends and interest from overseas companies, rent from overseas properties, wages, benefits or royalties from working abroad, pensions you receive from abroad, income from a trust based abroad, income from a life insurance policy.",
+        answerType: "boolean",
+      },
+      {
+        question: "How much you earn from your oversea company?",
+        answerType: "floatNumber",
+      },
+      {
+        question: "How much you earn from your job outside the UK?",
+        answerType: "floatNumber",
+      },
+      {
+        question:
+          "How much you earn from the oversea interest i.e. from bank, securities company, insurance company?",
+        answerType: "floatNumber",
+      },
+      {
+        question:
+          "How much you earn from the oversea dividend i.e. from stock, insurance company?",
+        answerType: "floatNumber",
+      },
+      {
+        question: "How much you earn from the rental income outside the UK?",
+        answerType: "floatNumber",
+      },
     ],
   ];
 
@@ -521,7 +632,24 @@ function App() {
       // so that all taxpayerAnswer is not marked as pending
       // hence passing the isAllTaxpayerAnswerStatusAnswered() check
       listofUsers[index].setTaxpayerAnswerStatusToAllSkipped();
+    } else if (listofUsers[index].taxpayerAnswer[5].answer === "undefined") {
+      addChatBotQuestion("Please answer yes or no to the question.");
+      // Set the stage and count to 1 and 2 respectively
+      setStage(2);
+      setCount(5);
+      currentStage = 2;
+      currentCount = 5;
     } else if (!listofUsers[index].isAllTaxpayerAnswerStatusAnswered()) {
+      // Show the below sentence when the user answer "Yes" to the question
+      // whether he/she has foreign income
+      if (
+        listofUsers[index].taxpayerAnswer[5].answer === true &&
+        listofUsers[index].taxpayerAnswer[6].status === "pending"
+      ) {
+        addChatBotQuestion(
+          "Your foreign income will be counted into your self-employed income. Please answer the questions below: "
+        );
+      }
       // Check which question is still pending in stage 2
       for (var i = 0; i < botQuestion[2].length; i++) {
         if (listofUsers[index].getTaxpayerAnswerStatus(i) === "pending") {
