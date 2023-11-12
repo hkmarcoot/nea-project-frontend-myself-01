@@ -249,16 +249,16 @@ function App() {
     var scroll = document.getElementById("dialogue-section");
     scroll.scrollTop = scroll.scrollHeight;
   }
-  // This function find the start date 183 days after the arrival date.
+  // This function find the start date after the arrival date.
   // However, if the start date is sooner than the start of the tax year,
   // It will return the start date of the tax year instead.
   function findStartDateOfTaxYear(input) {
     var arrivalDate = new Date(input);
     var startDateOfTaxYear = new Date("04/06/2022");
-    var DateAfter183Days = new Date(
-      arrivalDate.getTime() + 183 * (1000 * 3600 * 24)
-    );
-    var timeDiff = DateAfter183Days.getTime() - startDateOfTaxYear.getTime();
+    // var DateAfter183Days = new Date(
+    //   arrivalDate.getTime() + 183 * (1000 * 3600 * 24)
+    // );
+    var timeDiff = arrivalDate.getTime() - startDateOfTaxYear.getTime();
     // This function add '0' in front of the month or date if it is a single digit
     function formatMonthOrDate(input) {
       if (input.toString().length === 1) {
@@ -267,9 +267,9 @@ function App() {
         return input;
       }
     }
-    var month = formatMonthOrDate(DateAfter183Days.getMonth() + 1);
-    var date = formatMonthOrDate(DateAfter183Days.getDate());
-    var year = DateAfter183Days.getFullYear();
+    var month = formatMonthOrDate(arrivalDate.getMonth() + 1);
+    var date = formatMonthOrDate(arrivalDate.getDate());
+    var year = arrivalDate.getFullYear();
     if (timeDiff < 0) {
       return "04/06/2022";
     } else {
@@ -326,7 +326,7 @@ function App() {
               endDateOfTaxYear +
               ". " +
               startDateOfTaxYear +
-              " is the date 183 days after your arrival date."
+              " is your arrival date and it becomes your start date of the tax calculation."
           );
         }
         addChatBotQuestion(
@@ -345,8 +345,8 @@ function App() {
           "You are classified as a UK resident. However, you do not need to pay UK tax in the tax year 2022-2023."
         );
         addChatBotQuestion(
-          "It is because the date 183 days after your arrival date, which is on " +
-            startDateOfTaxYear +
+          "It is because your arrival date, which is on " +
+            listofUsers[index].surveyResult[0].answer +
             ", is after the end of the tax year 2022-2023, which is on " +
             endDateOfTaxYear +
             "."
