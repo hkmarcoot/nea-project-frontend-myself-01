@@ -90,22 +90,22 @@ class Taxpayer {
         answer: 0,
         description: "Earn from oversea rental income",
       },
-      11: {
-        status: "pending",
-        answer: 0,
-        description:
-          "Pension contributions made through your employer's pension scheme",
-      },
-      12: {
-        status: "pending",
-        answer: 0,
-        description: "Qualifying loan interest payments",
-      },
-      13: {
-        status: "pending",
-        answer: 0,
-        description: "Qualifying gifts to charities",
-      },
+      // 11: {
+      //   status: "pending",
+      //   answer: 0,
+      //   description:
+      //     "Pension contributions made through your employer's pension scheme",
+      // },
+      // 12: {
+      //   status: "pending",
+      //   answer: 0,
+      //   description: "Qualifying loan interest payments",
+      // },
+      // 13: {
+      //   status: "pending",
+      //   answer: 0,
+      //   description: "Qualifying gifts to charities",
+      // },
     };
     this.numOfDaysFromArrival = newUser.numOfDaysFromArrival || 0;
     this.income = newUser.income || {};
@@ -647,7 +647,7 @@ function App() {
         listofUsers[index].taxpayerAnswer[6].status === "pending"
       ) {
         addChatBotQuestion(
-          "Your foreign income will be counted into your self-employed income. Please answer the questions below: "
+          "Your foreign income will be counted into your self-employed income, where your oversea rental income can apply property allowance with your rental income in the UK. Please answer the questions below: "
         );
       }
       // Check which question is still pending in stage 2
