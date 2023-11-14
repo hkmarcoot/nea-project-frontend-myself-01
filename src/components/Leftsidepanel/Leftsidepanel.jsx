@@ -234,7 +234,7 @@ function Leftsidepanel({
       >
         Calculate TaxPaid
       </button>
-      <p>TaxPaid: {taxPaid}</p>
+      <p>TaxPaid: {taxPaid.answer}</p>
     </div>
   );
 }
