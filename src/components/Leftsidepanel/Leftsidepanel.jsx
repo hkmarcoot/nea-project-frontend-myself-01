@@ -274,7 +274,10 @@ function Leftsidepanel({
         <p>Total income: £{listofUsers[userIndex].totalIncome.answer}</p>
       ) : null}
       {listofUsers[userIndex].band.status === "calculated" ? (
-        <p>Your band: {listofUsers[userIndex].band.answer}</p>
+        <>
+          <p>Your band: {listofUsers[userIndex].band.answer}</p>
+          <p>---------------------------------------------</p>
+        </>
       ) : null}
       {listofUsers[userIndex].nonSavingsIncome.status === "calculated" ? (
         <p>
@@ -291,23 +294,13 @@ function Leftsidepanel({
         </>
       ) : null}
       {listofUsers[userIndex].taxOnNonSavingsIncome.status === "calculated" ? (
-        <p>
-          Tax on non-savings income: £
-          {listofUsers[userIndex].taxOnNonSavingsIncome.answer}
-        </p>
-      ) : null}
-      {listofUsers[userIndex].dividend.status === "calculated" ? (
-        <p>Dividend: £{listofUsers[userIndex].dividend.answer}</p>
-      ) : null}
-      {listofUsers[userIndex].taxOnDividendCalculation.status ===
-      "calculated" ? (
         <>
-          <p>Calculation:</p>
-          <p>{listofUsers[userIndex].taxOnDividendCalculation.answer}</p>
+          <p>
+            Tax on non-savings income: £
+            {listofUsers[userIndex].taxOnNonSavingsIncome.answer}
+          </p>
+          <p>---------------------------------------------</p>
         </>
-      ) : null}
-      {listofUsers[userIndex].taxOnDividend.status === "calculated" ? (
-        <p>Tax on dividend: £{listofUsers[userIndex].taxOnDividend.answer}</p>
       ) : null}
       {listofUsers[userIndex].interest.status === "calculated" ? (
         <p>Interest: £{listofUsers[userIndex].interest.answer}</p>
@@ -320,7 +313,26 @@ function Leftsidepanel({
         </>
       ) : null}
       {listofUsers[userIndex].taxOnInterest.status === "calculated" ? (
-        <p>Tax on interest: £{listofUsers[userIndex].taxOnInterest.answer}</p>
+        <>
+          <p>Tax on interest: £{listofUsers[userIndex].taxOnInterest.answer}</p>
+          <p>---------------------------------------------</p>
+        </>
+      ) : null}
+      {listofUsers[userIndex].dividend.status === "calculated" ? (
+        <p>Dividend: £{listofUsers[userIndex].dividend.answer}</p>
+      ) : null}
+      {listofUsers[userIndex].taxOnDividendCalculation.status ===
+      "calculated" ? (
+        <>
+          <p>Calculation:</p>
+          <p>{listofUsers[userIndex].taxOnDividendCalculation.answer}</p>
+        </>
+      ) : null}
+      {listofUsers[userIndex].taxOnDividend.status === "calculated" ? (
+        <>
+          <p>Tax on dividend: £{listofUsers[userIndex].taxOnDividend.answer}</p>
+          <p>---------------------------------------------</p>
+        </>
       ) : null}
       <p>Total Tax Paid: £{taxPaid.answer}</p>
     </div>

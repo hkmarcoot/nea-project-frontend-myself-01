@@ -299,12 +299,6 @@ class Taxpayer {
         personalAllowance +
         "(Personal Allowance)";
       this.taxOnNonSavingsIncomeCalculation.status = "calculated";
-      // Zero tax rate for dividend within personal allowance
-      var taxOnDividend = 0;
-      // Showing the calculation for dividend in Left Side Panel
-      this.taxOnDividendCalculation.answer =
-        "£" + dividend + " - Dividend Allowance - Remain Personal Allowance";
-      this.taxOnDividendCalculation.status = "calculated";
       // Zero tax rate for interest within personal allowance
       var taxOnInterest = 0;
       // Showing the calculation for interest in Left Side Panel
@@ -313,6 +307,12 @@ class Taxpayer {
         interest +
         " - Starting Rate For Savings - Personal Savings Allowance - Remain Personal Allowance";
       this.taxOnInterestCalculation.status = "calculated";
+      // Zero tax rate for dividend within personal allowance
+      var taxOnDividend = 0;
+      // Showing the calculation for dividend in Left Side Panel
+      this.taxOnDividendCalculation.answer =
+        "£" + dividend + " - Dividend Allowance - Remain Personal Allowance";
+      this.taxOnDividendCalculation.status = "calculated";
     } else if (totalIncome > personalAllowance && totalIncome <= 50270) {
       // Apply basic rate
 
@@ -335,29 +335,6 @@ class Taxpayer {
         " (Personal Allowance)) * 20%";
       this.taxOnNonSavingsIncomeCalculation.status = "calculated";
 
-      // Deduct dividend allowance
-      var dividendAfterAllowance = deductAllowance(dividend, 2000);
-      // Find out the the remain Personal Allowance
-      var remainPersonalAllowanceValue01 = remainPersonalAllowance(
-        nonSavingsIncome,
-        personalAllowance
-      );
-      // Deduct remain Personal Allowance if applicable
-      // to get the dividend to be taxed.
-      var dividendAfterRemainPersonalAllowance = deductAllowance(
-        dividendAfterAllowance,
-        remainPersonalAllowanceValue01
-      );
-      // The basic rate tax band for dividend is 8.75%.
-      taxOnDividend = dividendAfterRemainPersonalAllowance * 0.0875;
-      // Showing the calculation for dividend in Left Side Panel
-      this.taxOnDividendCalculation.answer =
-        "(£" +
-        dividend +
-        " - £2000 (Dividend Allowance) - £" +
-        remainPersonalAllowanceValue01 +
-        " (Remain Personal Allowance)) * 8.75%";
-      this.taxOnDividendCalculation.status = "calculated";
       // The basic rate tax band for interest is 20%,
       // which is treating interest as normal income.
       // The personal savings allowance for basic rate is 1000,
@@ -383,24 +360,22 @@ class Taxpayer {
         interestAfterPersonalSavingsAllowance,
         startingRateForSavings
       );
+
       // Find out the the remain Personal Allowance
-      // this method is similar with dividendAfterRemainPersonalAllowance
-      // The only different is this method is finding the remaining,
-      // while dividendAfterRemainPersonalAllowance is finding the deducted value.
-      var remainPersonalAllowanceValue02 = remainPersonalAllowance(
-        dividendAfterAllowance,
-        remainPersonalAllowanceValue01
+      var remainPersonalAllowanceValue01 = remainPersonalAllowance(
+        nonSavingsIncome,
+        personalAllowance
       );
 
       // Deduct remain Personal Allowance if applicable
       // to get the interest to be taxed.
-      var interestAfterPersonalAllowance = deductAllowance(
+      var interestAfterRemainPersonalAllowance = deductAllowance(
         interestAfterStartingRateForSavings,
-        remainPersonalAllowanceValue02
+        remainPersonalAllowanceValue01
       );
       // The basic rate tax band for interest is 20%,
       // which is treating interest as normal income.
-      taxOnInterest = interestAfterPersonalAllowance * 0.2;
+      taxOnInterest = interestAfterRemainPersonalAllowance * 0.2;
       // Showing the calculation for interest in Left Side Panel
       this.taxOnInterestCalculation.answer =
         "(£" +
@@ -409,9 +384,38 @@ class Taxpayer {
         startingRateForSavings +
         " (Starting rate for savings)" +
         " - £1000 (Personal Saving Allowance) - £" +
-        remainPersonalAllowanceValue02 +
+        remainPersonalAllowanceValue01 +
         " (Remain Personal Allowance)) * 20%";
       this.taxOnInterestCalculation.status = "calculated";
+
+      // Deduct dividend allowance
+      var dividendAfterAllowance = deductAllowance(dividend, 2000);
+
+      // Find out the the remain Personal Allowance
+      // this method is similar with interestAfterRemainPersonalAllowance
+      // The only different is this method is finding the remaining,
+      // while interestAfterRemainPersonalAllowance is finding the deducted value.
+      var remainPersonalAllowanceValue02 = remainPersonalAllowance(
+        interestAfterStartingRateForSavings,
+        remainPersonalAllowanceValue01
+      );
+
+      // Deduct remain Personal Allowance if applicable
+      // to get the dividend to be taxed.
+      var dividendAfterRemainPersonalAllowance = deductAllowance(
+        dividendAfterAllowance,
+        remainPersonalAllowanceValue02
+      );
+      // The basic rate tax band for dividend is 8.75%.
+      taxOnDividend = dividendAfterRemainPersonalAllowance * 0.0875;
+      // Showing the calculation for dividend in Left Side Panel
+      this.taxOnDividendCalculation.answer =
+        "(£" +
+        dividend +
+        " - £2000 (Dividend Allowance) - £" +
+        remainPersonalAllowanceValue02 +
+        " (Remain Personal Allowance)) * 8.75%";
+      this.taxOnDividendCalculation.status = "calculated";
     } else if (totalIncome > 50270 && totalIncome <= 125140) {
       // Apply higher rate
 
@@ -469,30 +473,6 @@ class Taxpayer {
           " (Personal Allowance)) * 0%";
         this.taxOnNonSavingsIncomeCalculation.status = "calculated";
       }
-      // Deduct dividend allowance
-      dividendAfterAllowance = deductAllowance(dividend, 2000);
-      // Find out the the remain Personal Allowance
-      remainPersonalAllowanceValue01 = remainPersonalAllowance(
-        nonSavingsIncome,
-        personalAllowance
-      );
-      // Deduct remain Personal Allowance if applicable
-      // to get the dividend to be taxed.
-      dividendAfterRemainPersonalAllowance = deductAllowance(
-        dividendAfterAllowance,
-        remainPersonalAllowanceValue01
-      );
-      // The higher rate tax band for dividend is 33.75%.
-      taxOnDividend = dividendAfterRemainPersonalAllowance * 0.3375;
-      // Showing the calculation for dividend in Left Side Panel
-      this.taxOnDividendCalculation.answer =
-        "(£" +
-        dividend +
-        " - £2000 (Dividend Allowance) - £" +
-        remainPersonalAllowanceValue01 +
-        " (Remain Personal Allowance)) * 33.75%";
-      this.taxOnDividendCalculation.status = "calculated";
-
       // The starting rate for savings is 0 for higher rate tax band,
       // which is not included in the calculation.
       // startingRateForSavings = 0;
@@ -502,32 +482,58 @@ class Taxpayer {
       interestAfterPersonalSavingsAllowance = deductAllowance(interest, 500);
 
       // Find out the the remain Personal Allowance
-      // this method is similar with dividendAfterRemainPersonalAllowance
-      // The only different is this method is finding the remaining,
-      // while dividendAfterRemainPersonalAllowance is finding the deducted value.
-      remainPersonalAllowanceValue02 = remainPersonalAllowance(
-        dividendAfterAllowance,
-        remainPersonalAllowanceValue01
+      remainPersonalAllowanceValue01 = remainPersonalAllowance(
+        nonSavingsIncome,
+        personalAllowance
       );
 
       // Deduct remain Personal Allowance if applicable
       // to get the interest to be taxed.
-      interestAfterPersonalAllowance = deductAllowance(
+      interestAfterRemainPersonalAllowance = deductAllowance(
         interestAfterPersonalSavingsAllowance,
-        remainPersonalAllowanceValue02
+        remainPersonalAllowanceValue01
       );
 
       // The higher rate tax band for interest is 40%,
       // which is treating interest as normal income.
-      taxOnInterest = interestAfterPersonalAllowance * 0.4;
+      taxOnInterest = interestAfterRemainPersonalAllowance * 0.4;
       // Showing the calculation for interest in Left Side Panel
       this.taxOnInterestCalculation.answer =
         "(£" +
         interest +
         " - £500 (Personal Savings Allowance) - £" +
-        remainPersonalAllowanceValue02 +
+        remainPersonalAllowanceValue01 +
         " (Remain Personal Allowance)) * 40%";
       this.taxOnInterestCalculation.status = "calculated";
+
+      // Deduct dividend allowance
+      dividendAfterAllowance = deductAllowance(dividend, 2000);
+
+      // Find out the the remain Personal Allowance
+      // this method is similar with interestAfterRemainPersonalAllowance
+      // The only different is this method is finding the remaining,
+      // while interestAfterRemainPersonalAllowance is finding the deducted value.
+      remainPersonalAllowanceValue02 = remainPersonalAllowance(
+        interestAfterPersonalSavingsAllowance,
+        remainPersonalAllowanceValue01
+      );
+
+      // Deduct remain Personal Allowance if applicable
+      // to get the dividend to be taxed.
+      dividendAfterRemainPersonalAllowance = deductAllowance(
+        dividendAfterAllowance,
+        remainPersonalAllowanceValue02
+      );
+      // The higher rate tax band for dividend is 33.75%.
+      taxOnDividend = dividendAfterRemainPersonalAllowance * 0.3375;
+      // Showing the calculation for dividend in Left Side Panel
+      this.taxOnDividendCalculation.answer =
+        "(£" +
+        dividend +
+        " - £2000 (Dividend Allowance) - £" +
+        remainPersonalAllowanceValue02 +
+        " (Remain Personal Allowance)) * 33.75%";
+      this.taxOnDividendCalculation.status = "calculated";
     } else if (totalIncome > 125140) {
       // Apply additional rate
 
@@ -602,29 +608,6 @@ class Taxpayer {
           " (Personal Allowance)) * 0%";
         this.taxOnNonSavingsIncomeCalculation.status = "calculated";
       }
-      // Deduct dividend allowance
-      dividendAfterAllowance = deductAllowance(dividend, 2000);
-      // Find out the the remain Personal Allowance
-      remainPersonalAllowanceValue01 = remainPersonalAllowance(
-        nonSavingsIncome,
-        personalAllowance
-      );
-      // Deduct remain Personal Allowance if applicable
-      // to get the dividend to be taxed.
-      dividendAfterRemainPersonalAllowance = deductAllowance(
-        dividendAfterAllowance,
-        remainPersonalAllowanceValue01
-      );
-      // The additional rate tax band for dividend is 39.35%.
-      taxOnDividend = dividendAfterRemainPersonalAllowance * 0.3935;
-      // Showing the calculation for dividend in Left Side Panel
-      this.taxOnDividendCalculation.answer =
-        "(£" +
-        dividend +
-        " - £2000 (Dividend Allowance) - £" +
-        remainPersonalAllowanceValue01 +
-        " (Remain Personal Allowance)) * 39.35%";
-      this.taxOnDividendCalculation.status = "calculated";
 
       // The starting rate for savings is 0 for additional rate tax band,
       // which is not included in the calculation.
@@ -634,32 +617,58 @@ class Taxpayer {
       // which is not included in the calculation.
 
       // Find out the the remain Personal Allowance
-      // this method is similar with dividendAfterRemainPersonalAllowance
-      // The only different is this method is finding the remaining,
-      // while dividendAfterRemainPersonalAllowance is finding the deducted value.
-      remainPersonalAllowanceValue02 = remainPersonalAllowance(
-        dividendAfterAllowance,
-        remainPersonalAllowanceValue01
+      remainPersonalAllowanceValue01 = remainPersonalAllowance(
+        nonSavingsIncome,
+        personalAllowance
       );
 
       // Deduct remain Personal Allowance if applicable
       // to get the interest to be taxed.
-      interestAfterPersonalAllowance = deductAllowance(
+      interestAfterRemainPersonalAllowance = deductAllowance(
         interest,
-        remainPersonalAllowanceValue02
+        remainPersonalAllowanceValue01
       );
 
       // The additional rate tax band for interest is 45%,
       // which is treating interest as normal income.
-      taxOnInterest = interestAfterPersonalAllowance * 0.45;
+      taxOnInterest = interestAfterRemainPersonalAllowance * 0.45;
       // Showing the calculation for interest in Left Side Panel
       this.taxOnInterestCalculation.answer =
         "(£" +
         interest +
         " - £" +
-        remainPersonalAllowanceValue02 +
+        remainPersonalAllowanceValue01 +
         " (Remain Personal Allowance)) * 45%";
       this.taxOnInterestCalculation.status = "calculated";
+
+      // Deduct dividend allowance
+      dividendAfterAllowance = deductAllowance(dividend, 2000);
+
+      // Find out the the remain Personal Allowance
+      // this method is similar with interestAfterRemainPersonalAllowance
+      // The only different is this method is finding the remaining,
+      // while interestAfterRemainPersonalAllowance is finding the deducted value.
+      remainPersonalAllowanceValue02 = remainPersonalAllowance(
+        interest,
+        remainPersonalAllowanceValue01
+      );
+
+      // Deduct remain Personal Allowance if applicable
+      // to get the dividend to be taxed.
+      dividendAfterRemainPersonalAllowance = deductAllowance(
+        dividendAfterAllowance,
+        remainPersonalAllowanceValue02
+      );
+      // The additional rate tax band for dividend is 39.35%.
+      taxOnDividend = dividendAfterRemainPersonalAllowance * 0.3935;
+      // Showing the calculation for dividend in Left Side Panel
+      this.taxOnDividendCalculation.answer =
+        "(£" +
+        dividend +
+        " - £2000 (Dividend Allowance) - £" +
+        remainPersonalAllowanceValue02 +
+        " (Remain Personal Allowance)) * 39.35%";
+      this.taxOnDividendCalculation.status = "calculated";
     }
     this.totalIncome.answer = totalIncome;
     this.totalIncome.status = "calculated";
