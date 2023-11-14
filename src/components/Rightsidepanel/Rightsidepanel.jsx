@@ -103,7 +103,7 @@ function Rightsidepanel({
           // Keep the status as pending
           listofUsers[userIndex].setSurveyResult(count, "undefined");
         }
-      } else if ((stage === 2 && count <= 4) || (stage === 2 && count >= 6)) {
+      } else if ((stage === 2 && count <= 3) || (stage === 2 && count >= 5)) {
         // Change from using useState to calling the method
         // directly from the list of object
         // console.log("stage: " + stage + ", count: " + count);
@@ -113,7 +113,7 @@ function Rightsidepanel({
         }
         listofUsers[userIndex].setTaxpayerAnswer(count, parseFloat(input));
         listofUsers[userIndex].setTaxpayerAnswerStatus(count, "answered");
-      } else if (stage === 2 && count === 5) {
+      } else if (stage === 2 && count === 4) {
         // Change from using useState to calling the method
         // directly from the list of object
         // console.log("stage: " + stage + ", count: " + count);

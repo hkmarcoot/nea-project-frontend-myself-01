@@ -53,59 +53,48 @@ class Taxpayer {
       3: {
         status: "pending",
         answer: 0,
-        description: "Earn from pensions in the UK",
-      },
-      4: {
-        status: "pending",
-        answer: 0,
         description: "Earn from local rental income",
       },
-      5: {
+      4: {
         status: "pending",
         answer: "",
         description: "A boolean whether the user has foreign income or not",
       },
-      6: {
+      5: {
         status: "pending",
         answer: 0,
         description: "Earn from oversea company",
       },
-      7: {
+      6: {
         status: "pending",
         answer: 0,
         description: "Earn from job outside the UK",
       },
-      8: {
+      7: {
         status: "pending",
         answer: 0,
         description: "Earn from oversea interest",
       },
-      9: {
+      8: {
         status: "pending",
         answer: 0,
         description: "Earn from oversea dividend",
       },
-      10: {
+      9: {
         status: "pending",
         answer: 0,
         description: "Earn from oversea rental income",
       },
-      // 11: {
-      //   status: "pending",
-      //   answer: 0,
-      //   description:
-      //     "Pension contributions made through your employer's pension scheme",
-      // },
-      // 12: {
-      //   status: "pending",
-      //   answer: 0,
-      //   description: "Qualifying loan interest payments",
-      // },
-      // 13: {
-      //   status: "pending",
-      //   answer: 0,
-      //   description: "Qualifying gifts to charities",
-      // },
+      10: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from interest in savings in the UK",
+      },
+      11: {
+        status: "pending",
+        answer: 0,
+        description: "Earn from dividend in the UK",
+      },
     };
     this.numOfDaysFromArrival = newUser.numOfDaysFromArrival || 0;
     this.income = newUser.income || {};
@@ -163,8 +152,8 @@ class Taxpayer {
 
   calculateTaxPaid() {
     var newArr = [
-      ...Object.values(this.taxpayerAnswer).slice(0, 5),
-      ...Object.values(this.taxpayerAnswer).slice(6),
+      ...Object.values(this.taxpayerAnswer).slice(0, 4),
+      ...Object.values(this.taxpayerAnswer).slice(5),
     ];
     var sum = newArr.reduce((a, b) => a + b.answer, 0) + 1000;
     this.taxPaid = sum;
@@ -260,17 +249,13 @@ function App() {
         answerType: "floatNumber",
       },
       {
-        question: "How much you earn from pensions in the UK?",
-        answerType: "floatNumber",
-      },
-      {
         question:
           "How much you earn from rental income, where the properties are in the UK? (Please add together your rental incomes and deduct any expenses.)",
         answerType: "floatNumber",
       },
       {
         question:
-          "Do you have any foregin income? Any income that generated outside the UK is counted as foregin income, which includes: Profit generated from your company outside the UK, interest from overseas bank, dividends and interest from overseas companies, rent from overseas properties, wages, benefits or royalties from working abroad, pensions you receive from abroad, income from a trust based abroad, income from a life insurance policy.",
+          "Do you have any foregin income? Any income that generated outside the UK is counted as foregin income, which includes: Profit generated from your company outside the UK, interest from overseas bank and building society accounts, dividends and interest from overseas companies, rent from overseas properties, wages, benefits or royalties from working abroad, pensions you receive from abroad, income from a trust based abroad, income from a life insurance policy.",
         answerType: "boolean",
       },
       {
@@ -293,6 +278,15 @@ function App() {
       },
       {
         question: "How much you earn from the rental income outside the UK?",
+        answerType: "floatNumber",
+      },
+      {
+        question:
+          "How much you earn from the interest in your savings in the UK?",
+        answerType: "floatNumber",
+      },
+      {
+        question: "How much you earn from the dividend in the UK?",
         answerType: "floatNumber",
       },
     ],
@@ -632,22 +626,22 @@ function App() {
       // so that all taxpayerAnswer is not marked as pending
       // hence passing the isAllTaxpayerAnswerStatusAnswered() check
       listofUsers[index].setTaxpayerAnswerStatusToAllSkipped();
-    } else if (listofUsers[index].taxpayerAnswer[5].answer === "undefined") {
+    } else if (listofUsers[index].taxpayerAnswer[4].answer === "undefined") {
       addChatBotQuestion("Please answer yes or no to the question.");
       // Set the stage and count to 1 and 2 respectively
       setStage(2);
-      setCount(5);
+      setCount(4);
       currentStage = 2;
-      currentCount = 5;
+      currentCount = 4;
     } else if (!listofUsers[index].isAllTaxpayerAnswerStatusAnswered()) {
       // Show the below sentence when the user answer "Yes" to the question
       // whether he/she has foreign income
       if (
-        listofUsers[index].taxpayerAnswer[5].answer === true &&
-        listofUsers[index].taxpayerAnswer[6].status === "pending"
+        listofUsers[index].taxpayerAnswer[4].answer === true &&
+        listofUsers[index].taxpayerAnswer[5].status === "pending"
       ) {
         addChatBotQuestion(
-          "Your foreign income will be counted into your self-employed income, where your oversea rental income can apply property allowance with your rental income in the UK. Please answer the questions below: "
+          "Your foreign income will be counted into your self-employed income because you need to report your foreign income in a Self Assessment tax return. Special rules apply on your oversea rental income since it can apply property allowance together with your rental income in the UK. Similarly, the oversea interest and the oversea dividend can apply personal savings allowance and dividend allowance since most foreign income is taxed in the same way as UK income. Please answer the questions below: "
         );
       }
       // Check which question is still pending in stage 2

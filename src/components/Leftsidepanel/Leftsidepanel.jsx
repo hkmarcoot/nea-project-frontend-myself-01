@@ -21,8 +21,8 @@ function Leftsidepanel({
 
     // Remove the 5th element in the array
     var newArr = [
-      ...Object.values(userAnswer).slice(0, 5),
-      ...Object.values(userAnswer).slice(6),
+      ...Object.values(userAnswer).slice(0, 4),
+      ...Object.values(userAnswer).slice(5),
     ];
     // return Object.values(userAnswer).reduce((a, b) => a + b.answer, 0);
     return newArr.reduce((a, b) => a + b.answer, 0);
@@ -111,29 +111,17 @@ function Leftsidepanel({
             addChatBotQuestion(botQuestion[2][3].question);
           }}
         >
-          Earn From Pensions (local): £{userAnswer[3].answer}
+          Earn From Rental income (local): £{userAnswer[3].answer}
         </p>
       ) : null}
       {userAnswer[4].status === "answered" ? (
-        <p
-          className="hover:font-bold hover:cursor-pointer hover:bg-medium-blue"
-          onClick={() => {
-            setStage(2);
-            setCount(4);
-            addChatBotQuestion(botQuestion[2][4].question);
-          }}
-        >
-          Earn From Rental income (local): £{userAnswer[4].answer}
-        </p>
-      ) : null}
-      {userAnswer[5].status === "answered" ? (
-        userAnswer[5].answer === true ? (
+        userAnswer[4].answer === true ? (
           <p
             className="hover:font-bold hover:cursor-pointer hover:bg-medium-blue"
             onClick={() => {
               setStage(2);
-              setCount(5);
-              addChatBotQuestion(botQuestion[2][5].question);
+              setCount(4);
+              addChatBotQuestion(botQuestion[2][4].question);
             }}
           >
             Any foregin income? Yes
@@ -143,13 +131,25 @@ function Leftsidepanel({
             className="hover:font-bold hover:cursor-pointer hover:bg-medium-blue"
             onClick={() => {
               setStage(2);
-              setCount(5);
-              addChatBotQuestion(botQuestion[2][5].question);
+              setCount(4);
+              addChatBotQuestion(botQuestion[2][4].question);
             }}
           >
             Any foregin income? No
           </p>
         )
+      ) : null}
+      {userAnswer[5].status === "answered" ? (
+        <p
+          className="hover:font-bold hover:cursor-pointer hover:bg-medium-blue"
+          onClick={() => {
+            setStage(2);
+            setCount(5);
+            addChatBotQuestion(botQuestion[2][5].question);
+          }}
+        >
+          Earn from your oversea company: £{userAnswer[5].answer}
+        </p>
       ) : null}
       {userAnswer[6].status === "answered" ? (
         <p
@@ -160,7 +160,7 @@ function Leftsidepanel({
             addChatBotQuestion(botQuestion[2][6].question);
           }}
         >
-          Earn from your oversea company: £{userAnswer[6].answer}
+          Earn from your oversea job: £{userAnswer[6].answer}
         </p>
       ) : null}
       {userAnswer[7].status === "answered" ? (
@@ -172,7 +172,7 @@ function Leftsidepanel({
             addChatBotQuestion(botQuestion[2][7].question);
           }}
         >
-          Earn from your oversea job: £{userAnswer[7].answer}
+          Earn from the oversea interest: £{userAnswer[7].answer}
         </p>
       ) : null}
       {userAnswer[8].status === "answered" ? (
@@ -184,7 +184,7 @@ function Leftsidepanel({
             addChatBotQuestion(botQuestion[2][8].question);
           }}
         >
-          Earn from the oversea interest: £{userAnswer[8].answer}
+          Earn from the oversea dividend: £{userAnswer[8].answer}
         </p>
       ) : null}
       {userAnswer[9].status === "answered" ? (
@@ -196,7 +196,7 @@ function Leftsidepanel({
             addChatBotQuestion(botQuestion[2][9].question);
           }}
         >
-          Earn from the oversea dividend: £{userAnswer[9].answer}
+          Earn from the oversea rental income: £{userAnswer[9].answer}
         </p>
       ) : null}
       {userAnswer[10].status === "answered" ? (
@@ -208,7 +208,20 @@ function Leftsidepanel({
             addChatBotQuestion(botQuestion[2][10].question);
           }}
         >
-          Earn from the oversea rental income?: £{userAnswer[10].answer}
+          Earn from the interest in your savings (local): £
+          {userAnswer[10].answer}
+        </p>
+      ) : null}
+      {userAnswer[11].status === "answered" ? (
+        <p
+          className="hover:font-bold hover:cursor-pointer hover:bg-medium-blue"
+          onClick={() => {
+            setStage(2);
+            setCount(11);
+            addChatBotQuestion(botQuestion[2][11].question);
+          }}
+        >
+          Earn from the dividend (local): £{userAnswer[11].answer}
         </p>
       ) : null}
       <p>Total value of answers: {sum}</p>
