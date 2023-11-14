@@ -97,7 +97,7 @@ class Taxpayer {
       },
     };
     this.numOfDaysFromArrival = newUser.numOfDaysFromArrival || 0;
-    // this.income = newUser.income || {};
+
     this.wages = newUser.wages || { status: "pending", answer: 0 };
     this.tradingBeforeAllowance = newUser.tradingBeforeAllowance || {
       status: "pending",
@@ -180,16 +180,6 @@ class Taxpayer {
     }
   }
 
-  // setTaxpayerIncome(answer) {
-  //   this.income = answer;
-  // }
-
-  // calculatePart1(income) {
-  //   return income;
-  // }
-
-  // calculatePart2(income) {}
-
   // calculateTaxPaid() {
   //   var newArr = [
   //     ...Object.values(this.taxpayerAnswer).slice(0, 4),
@@ -264,6 +254,9 @@ class Taxpayer {
     } else if (totalIncome > personalAllowance && totalIncome <= 50270) {
       // Apply basic rate
 
+      // The band is basic rate
+      band = "Basic Rate";
+
       // Total income minus dividend and interest is non savings income,
       // then minus personal allowance to get the income to be taxed.
       // Please refer to the example in https://www.gov.uk/tax-on-dividends
@@ -300,10 +293,11 @@ class Taxpayer {
       // The basic rate tax band for interest is 20%,
       // which is treating interest as normal income.
       taxOnInterest = interestAfterStartingRateForSavings * 0.2;
-      // The band is basic rate
-      band = "Basic Rate";
     } else if (totalIncome > 50270 && totalIncome <= 125140) {
       // Apply higher rate
+
+      // The band is higher rate
+      band = "Higher Rate";
 
       // Higher rate tax band is 40% for wage between 50270 and 125140
       // Basic rate tax band is 20% for wage between 12570 and 50270
@@ -328,10 +322,11 @@ class Taxpayer {
       // The higher rate tax band for interest is 40%,
       // which is treating interest as normal income.
       taxOnInterest = interestAfterPersonalSavingsAllowance * 0.4;
-      // The band is higher rate
-      band = "Higher Rate";
     } else if (totalIncome > 125140) {
       // Apply additional rate
+
+      // The band is additional rate
+      band = "Additional Rate";
 
       // Additional rate tax band is 45% for wage above 125140
       // Higher rate tax band is 40% for wage between 50270 and 125140
@@ -359,8 +354,6 @@ class Taxpayer {
       // The additional rate tax band for interest is 45%,
       // which is treating interest as normal income.
       taxOnInterest = interest * 0.45;
-      // The band is additional rate
-      band = "Additional Rate";
     }
     this.nonSavingsIncome.answer = nonSavingsIncome;
     this.nonSavingsIncome.status = "calculated";
