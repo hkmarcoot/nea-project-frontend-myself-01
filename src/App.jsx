@@ -199,10 +199,13 @@ class Taxpayer {
   //   this.taxPaid = sum;
   // }
   calculateTaxPaid() {
+    // Convert the taxpayerAnswer object to an array
     var arr = Object.values(this.taxpayerAnswer);
+
     // deductAllowance can be used
     // for trading allowance, property allowance,
-    // and dividend allowance
+    // dividend allowance, personal savings allowance
+    // and starting rate for savings
     function deductAllowance(income, allowance) {
       if (income <= allowance) {
         return 0;
@@ -230,6 +233,12 @@ class Taxpayer {
     var dividend = arr[8].answer + arr[11].answer;
     var interest = arr[7].answer + arr[10].answer;
 
+    // Total income is wages + trading + property + dividend + interest
+    // Simpified calculation for trading allowance and property allowance
+    // is apply, which deduct 1000 in maximum.
+    // The detailed calculation can be found here:
+    // https://www.litrg.org.uk/tax-guides/savers-property-owners-and-other-tax-issues/property-income/renting-out-property#toc-how-does-the-property-allowance-work-
+    // https://www.litrg.org.uk/tax-guides/self-employment/what-trading-allowance
     var totalIncome =
       wages +
       deductAllowance(trading, 1000) +
@@ -237,10 +246,12 @@ class Taxpayer {
       dividend +
       interest;
 
+    // The personal allowance is 12570
     var personalAllowance = 12570;
+
     if (totalIncome <= personalAllowance) {
-      // this.taxPaid.answer = 0;
-      // this.taxPaid.status = "calculated";
+      // The tax should be 0 if the total income is less than personal allowance
+      // This is for calculating non-savings income
       var nonSavingsIncome = totalIncome - dividend - interest;
       // Zero tax rate for non-savings income within personal allowance
       var taxOnNonSavingsIncome = 0;
@@ -253,8 +264,8 @@ class Taxpayer {
     } else if (totalIncome > personalAllowance && totalIncome <= 50270) {
       // Apply basic rate
 
-      // Total income minus personal allowance is taxable income
-      // minus dividend and interest to get the wage to be taxed.
+      // Total income minus dividend and interest is non savings income,
+      // then minus personal allowance to get the income to be taxed.
       // Please refer to the example in https://www.gov.uk/tax-on-dividends
       nonSavingsIncome = totalIncome - dividend - interest;
       taxOnNonSavingsIncome = (nonSavingsIncome - personalAllowance) * 0.2;
@@ -297,6 +308,8 @@ class Taxpayer {
       // Higher rate tax band is 40% for wage between 50270 and 125140
       // Basic rate tax band is 20% for wage between 12570 and 50270
       nonSavingsIncome = totalIncome - dividend - interest;
+      // The income between value and 50270 is taxed at 40%,
+      // the income between 50270 and personal allowance is taxed at 20%.
       taxOnNonSavingsIncome =
         (nonSavingsIncome - 50270) * 0.4 + (50270 - personalAllowance) * 0.2;
 
@@ -324,6 +337,9 @@ class Taxpayer {
       // Higher rate tax band is 40% for wage between 50270 and 125140
       // Basic rate tax band is 20% for wage between 12570 and 50270
       nonSavingsIncome = totalIncome - dividend - interest;
+      // The income between value and 125140 is taxed at 45%,
+      // the income between 125140 and 50270 is taxed at 40%,
+      // the income between 50270 and personal allowance is taxed at 20%.
       taxOnNonSavingsIncome =
         (nonSavingsIncome - 125140) * 0.45 +
         (125140 - 50270) * 0.4 +
