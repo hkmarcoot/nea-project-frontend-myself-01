@@ -418,6 +418,18 @@ class Taxpayer {
       // The band is higher rate
       band = "Higher Rate";
 
+      // Adjust personal allowance for adjusted net income
+      // more than £100,000.
+      // Plese refer to https://www.gov.uk/income-tax-rates/income-over-100000
+      var netIncome = wages + trading + property + dividend + interest;
+      if (netIncome <= 100000) {
+        personalAllowance = 12570;
+      } else if (netIncome > 100000 && netIncome <= 125140) {
+        personalAllowance = 12570 - (netIncome - 100000) / 2;
+      } else if (netIncome > 125140) {
+        personalAllowance = 0;
+      }
+
       // Higher rate tax band is 40% for wage between 50270 and 125140
       // Basic rate tax band is 20% for wage between 12570 and 50270
       nonSavingsIncome = totalIncome - dividend - interest;
@@ -550,7 +562,9 @@ class Taxpayer {
         this.taxOnNonSavingsIncomeCalculation.answer =
           "(£" +
           nonSavingsIncome +
-          " - £125140) * 45% + (£125140 - £50270) * 40% + (£50270 - Personal Allowance) * 20%";
+          " - £125140) * 45% + (£125140 - £50270) * 40% + (£50270 - £" +
+          personalAllowance +
+          " (Personal Allowance)) * 20%";
         this.taxOnNonSavingsIncomeCalculation.status = "calculated";
       } else if (nonSavingsIncome > 50270 && nonSavingsIncome <= 125140) {
         // The income between value and 50270 is taxed at 40%,
@@ -561,14 +575,20 @@ class Taxpayer {
         this.taxOnNonSavingsIncomeCalculation.answer =
           "(£" +
           nonSavingsIncome +
-          " - £50270) * 40% + (£50270 - Personal Allowance) * 20%";
+          " - £50270) * 40% + (£50270 - £" +
+          personalAllowance +
+          " (Personal Allowance)) * 20%";
         this.taxOnNonSavingsIncomeCalculation.status = "calculated";
       } else if (nonSavingsIncome > 12570 && nonSavingsIncome <= 50270) {
         // The income between value and personal allowance is taxed at 20%.
         taxOnNonSavingsIncome = (nonSavingsIncome - personalAllowance) * 0.2;
         // Showing the calculation for non-savings income in Left Side Panel
         this.taxOnNonSavingsIncomeCalculation.answer =
-          "(£" + nonSavingsIncome + " - Personal Allowance) * 20%";
+          "(£" +
+          nonSavingsIncome +
+          " - £" +
+          personalAllowance +
+          " (Personal Allowance)) * 20%";
         this.taxOnNonSavingsIncomeCalculation.status = "calculated";
       } else if (nonSavingsIncome <= 12570) {
         // the income below personal allowance is taxed at 0%.
