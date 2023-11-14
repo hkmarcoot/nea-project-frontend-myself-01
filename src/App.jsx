@@ -537,7 +537,7 @@ class Taxpayer {
       // Adjust personal allowance for adjusted net income
       // more than £100,000.
       // Plese refer to https://www.gov.uk/income-tax-rates/income-over-100000
-      var netIncome = wages + trading + property + dividend + interest;
+      netIncome = wages + trading + property + dividend + interest;
       if (netIncome <= 100000) {
         personalAllowance = 12570;
       } else if (netIncome > 100000 && netIncome <= 125140) {
