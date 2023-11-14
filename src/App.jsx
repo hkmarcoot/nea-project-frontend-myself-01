@@ -341,13 +341,17 @@ class Taxpayer {
       // and starting rate for savings is to be calculated,
       // please refer to the example in https://www.gov.uk/apply-tax-free-interest-on-savings
       var otherIncomeForTaxOnInterest = totalIncome - interest;
-      var remaining = otherIncomeForTaxOnInterest - personalAllowance;
       // 5000 is the maximum of starting rate for savings
       // The if statement is to find out the starting rate for savings
-      if (remaining > 5000) {
-        var startingRateForSavings = 0;
-      } else {
-        startingRateForSavings = 5000 - remaining;
+      if (otherIncomeForTaxOnInterest <= 12570) {
+        var startingRateForSavings = 5000;
+      } else if (
+        otherIncomeForTaxOnInterest > 12570 &&
+        otherIncomeForTaxOnInterest <= 17570
+      ) {
+        startingRateForSavings = 5000 - (otherIncomeForTaxOnInterest - 12570);
+      } else if (otherIncomeForTaxOnInterest > 17570) {
+        startingRateForSavings = 0;
       }
       // The interest deducts the personal savings allowance,
       // which is 1000 for basic rate tax band
