@@ -240,6 +240,11 @@ class Taxpayer {
     var personalAllowance = 12570;
 
     if (totalIncome <= personalAllowance) {
+      // Apply personal allowance
+
+      // The band is personal allowance
+      var band = "Personal Allowance";
+
       // The tax should be 0 if the total income is less than personal allowance
       // This is for calculating non-savings income
       var nonSavingsIncome = totalIncome - dividend - interest;
@@ -249,8 +254,6 @@ class Taxpayer {
       var taxOnDividend = 0;
       // Zero tax rate for interest within personal allowance
       var taxOnInterest = 0;
-      // The band is personal allowance
-      var band = "Personal Allowance";
     } else if (totalIncome > personalAllowance && totalIncome <= 50270) {
       // Apply basic rate
 
