@@ -224,7 +224,7 @@ function Leftsidepanel({
           Earn from the dividend (local): £{userAnswer[11].answer}
         </p>
       ) : null}
-      <p>Total value of answers: {sum}</p>
+      <p>Total income before allowance applied: £{sum}</p>
       <button
         className="bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded"
         onClick={() => {
@@ -234,7 +234,95 @@ function Leftsidepanel({
       >
         Calculate TaxPaid
       </button>
-      <p>TaxPaid: {taxPaid.answer}</p>
+      {listofUsers[userIndex].wages.status === "calculated" ? (
+        <p>Wages: £{listofUsers[userIndex].wages.answer}</p>
+      ) : null}
+      {listofUsers[userIndex].tradingBeforeAllowance.status === "calculated" ? (
+        <p>
+          Trading income before allowance: £
+          {listofUsers[userIndex].tradingBeforeAllowance.answer}
+        </p>
+      ) : null}
+      {listofUsers[userIndex].tradingAfterAllowance.status === "calculated" ? (
+        <>
+          <p>Trading income after allowance applied:</p>
+          <p>
+            £{listofUsers[userIndex].tradingBeforeAllowance.answer} - £
+            {listofUsers[userIndex].tradingAllowanceApplied.answer} = £
+            {listofUsers[userIndex].tradingAfterAllowance.answer}
+          </p>
+        </>
+      ) : null}
+      {listofUsers[userIndex].propertyBeforeAllowance.status ===
+      "calculated" ? (
+        <p>
+          Property income before allowance: £
+          {listofUsers[userIndex].propertyBeforeAllowance.answer}
+        </p>
+      ) : null}
+      {listofUsers[userIndex].propertyAfterAllowance.status === "calculated" ? (
+        <>
+          <p>Property income after allowance applied:</p>
+          <p>
+            £{listofUsers[userIndex].propertyBeforeAllowance.answer} - £
+            {listofUsers[userIndex].propertyAllowanceApplied.answer} = £
+            {listofUsers[userIndex].propertyAfterAllowance.answer}
+          </p>
+        </>
+      ) : null}
+      {listofUsers[userIndex].totalIncome.status === "calculated" ? (
+        <p>Total income: £{listofUsers[userIndex].totalIncome.answer}</p>
+      ) : null}
+      {listofUsers[userIndex].band.status === "calculated" ? (
+        <p>Your band: {listofUsers[userIndex].band.answer}</p>
+      ) : null}
+      {listofUsers[userIndex].nonSavingsIncome.status === "calculated" ? (
+        <p>
+          Non-savings income: £{listofUsers[userIndex].nonSavingsIncome.answer}
+        </p>
+      ) : null}
+      {listofUsers[userIndex].taxOnNonSavingsIncomeCalculation.status ===
+      "calculated" ? (
+        <>
+          <p>Calculation:</p>
+          <p>
+            {listofUsers[userIndex].taxOnNonSavingsIncomeCalculation.answer}
+          </p>
+        </>
+      ) : null}
+      {listofUsers[userIndex].taxOnNonSavingsIncome.status === "calculated" ? (
+        <p>
+          Tax on non-savings income: £
+          {listofUsers[userIndex].taxOnNonSavingsIncome.answer}
+        </p>
+      ) : null}
+      {listofUsers[userIndex].dividend.status === "calculated" ? (
+        <p>Dividend: £{listofUsers[userIndex].dividend.answer}</p>
+      ) : null}
+      {listofUsers[userIndex].taxOnDividendCalculation.status ===
+      "calculated" ? (
+        <>
+          <p>Calculation:</p>
+          <p>{listofUsers[userIndex].taxOnDividendCalculation.answer}</p>
+        </>
+      ) : null}
+      {listofUsers[userIndex].taxOnDividend.status === "calculated" ? (
+        <p>Tax on dividend: £{listofUsers[userIndex].taxOnDividend.answer}</p>
+      ) : null}
+      {listofUsers[userIndex].interest.status === "calculated" ? (
+        <p>Interest: £{listofUsers[userIndex].interest.answer}</p>
+      ) : null}
+      {listofUsers[userIndex].taxOnInterestCalculation.status ===
+      "calculated" ? (
+        <>
+          <p>Calculation:</p>
+          <p>{listofUsers[userIndex].taxOnInterestCalculation.answer}</p>
+        </>
+      ) : null}
+      {listofUsers[userIndex].taxOnInterest.status === "calculated" ? (
+        <p>Tax on interest: £{listofUsers[userIndex].taxOnInterest.answer}</p>
+      ) : null}
+      <p>Total Tax Paid: £{taxPaid.answer}</p>
     </div>
   );
 }

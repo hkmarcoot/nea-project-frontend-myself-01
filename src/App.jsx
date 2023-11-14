@@ -107,11 +107,23 @@ class Taxpayer {
       status: "pending",
       answer: 0,
     };
+    this.tradingAllowanceApplied = newUser.tradingAllowanceApplied || {
+      status: "pending",
+      answer: 0,
+    };
     this.propertyBeforeAllowance = newUser.propertyBeforeAllowance || {
       status: "pending",
       answer: 0,
     };
     this.propertyAfterAllowance = newUser.propertyAfterAllowance || {
+      status: "pending",
+      answer: 0,
+    };
+    this.propertyAllowanceApplied = newUser.propertyAllowanceApplied || {
+      status: "pending",
+      answer: 0,
+    };
+    this.totalIncome = newUser.totalIncome || {
       status: "pending",
       answer: 0,
     };
@@ -123,15 +135,28 @@ class Taxpayer {
       status: "pending",
       answer: 0,
     };
+    this.taxOnNonSavingsIncomeCalculation =
+      newUser.taxOnNonSavingsIncomeCalculation || {
+        status: "pending",
+        answer: "",
+      };
     this.dividend = newUser.dividend || { status: "pending", answer: 0 };
     this.taxOnDividend = newUser.taxOnDividend || {
       status: "pending",
       answer: 0,
     };
+    this.taxOnDividendCalculation = newUser.taxOnDividendCalculation || {
+      status: "pending",
+      answer: "",
+    };
     this.interest = newUser.interest || { status: "pending", answer: 0 };
     this.taxOnInterest = newUser.taxOnInterest || {
       status: "pending",
       answer: 0,
+    };
+    this.taxOnInterestCalculation = newUser.taxOnInterestCalculation || {
+      status: "pending",
+      answer: "",
     };
     this.taxPaid = newUser.taxPaid || {
       status: "pending",
@@ -204,6 +229,16 @@ class Taxpayer {
       }
     }
 
+    // remainPersonalAllowance can be used
+    // in non-savings income, dividend and interest
+    function remainPersonalAllowance(income, allowance) {
+      if (income <= allowance) {
+        return allowance - income;
+      } else {
+        return 0;
+      }
+    }
+
     var wages = arr[0].answer;
     this.wages.answer = wages;
     this.wages.status = "calculated";
@@ -211,14 +246,20 @@ class Taxpayer {
     var trading = arr[1].answer + arr[2].answer + arr[5].answer + arr[6].answer;
     this.tradingBeforeAllowance.answer = trading;
     this.tradingAfterAllowance.answer = deductAllowance(trading, 1000);
+    this.tradingAllowanceApplied.answer =
+      trading - deductAllowance(trading, 1000);
     this.tradingBeforeAllowance.status = "calculated";
     this.tradingAfterAllowance.status = "calculated";
+    this.tradingAllowanceApplied.status = "calculated";
 
     var property = arr[3].answer + arr[9].answer;
     this.propertyBeforeAllowance.answer = property;
     this.propertyAfterAllowance.answer = deductAllowance(property, 1000);
+    this.propertyAllowanceApplied.answer =
+      property - deductAllowance(property, 1000);
     this.propertyBeforeAllowance.status = "calculated";
     this.propertyAfterAllowance.status = "calculated";
+    this.propertyAllowanceApplied.status = "calculated";
 
     var dividend = arr[8].answer + arr[11].answer;
     var interest = arr[7].answer + arr[10].answer;
@@ -240,7 +281,7 @@ class Taxpayer {
     var personalAllowance = 12570;
 
     if (totalIncome <= personalAllowance) {
-      // Apply personal allowance
+      // Apply personal allowance tax band
 
       // The band is personal allowance
       var band = "Personal Allowance";
@@ -250,10 +291,28 @@ class Taxpayer {
       var nonSavingsIncome = totalIncome - dividend - interest;
       // Zero tax rate for non-savings income within personal allowance
       var taxOnNonSavingsIncome = 0;
+      // Showing the calculation for non-savings income in Left Side Panel
+      this.taxOnNonSavingsIncomeCalculation.answer =
+        "£" +
+        nonSavingsIncome +
+        " - £" +
+        personalAllowance +
+        "(Personal Allowance)";
+      this.taxOnNonSavingsIncomeCalculation.status = "calculated";
       // Zero tax rate for dividend within personal allowance
       var taxOnDividend = 0;
+      // Showing the calculation for dividend in Left Side Panel
+      this.taxOnDividendCalculation.answer =
+        "£" + dividend + " - Dividend Allowance - Remain Personal Allowance";
+      this.taxOnDividendCalculation.status = "calculated";
       // Zero tax rate for interest within personal allowance
       var taxOnInterest = 0;
+      // Showing the calculation for interest in Left Side Panel
+      this.taxOnInterestCalculation.answer =
+        "£" +
+        interest +
+        " - Starting Rate For Savings - Personal Savings Allowance - Remain Personal Allowance";
+      this.taxOnInterestCalculation.status = "calculated";
     } else if (totalIncome > personalAllowance && totalIncome <= 50270) {
       // Apply basic rate
 
@@ -264,10 +323,41 @@ class Taxpayer {
       // then minus personal allowance to get the income to be taxed.
       // Please refer to the example in https://www.gov.uk/tax-on-dividends
       nonSavingsIncome = totalIncome - dividend - interest;
-      taxOnNonSavingsIncome = (nonSavingsIncome - personalAllowance) * 0.2;
-      // The basic rate tax band for dividend is 8.75%,
-      // deduct dividend allowance to get the dividend to be taxed.
-      taxOnDividend = deductAllowance(dividend, 2000) * 0.0875;
+      // taxOnNonSavingsIncome = (nonSavingsIncome - personalAllowance) * 0.2;
+      taxOnNonSavingsIncome =
+        deductAllowance(nonSavingsIncome, personalAllowance) * 0.2;
+      // Showing the calculation for non-savings income in Left Side Panel
+      this.taxOnNonSavingsIncomeCalculation.answer =
+        "(£" +
+        nonSavingsIncome +
+        " - £" +
+        personalAllowance +
+        " (Personal Allowance)) * 20%";
+      this.taxOnNonSavingsIncomeCalculation.status = "calculated";
+
+      // Deduct dividend allowance
+      var dividendAfterAllowance = deductAllowance(dividend, 2000);
+      // Find out the the remain Personal Allowance
+      var remainPersonalAllowanceValue01 = remainPersonalAllowance(
+        nonSavingsIncome,
+        personalAllowance
+      );
+      // Deduct remain Personal Allowance if applicable
+      // to get the dividend to be taxed.
+      var dividendAfterRemainPersonalAllowance = deductAllowance(
+        dividendAfterAllowance,
+        remainPersonalAllowanceValue01
+      );
+      // The basic rate tax band for dividend is 8.75%.
+      taxOnDividend = dividendAfterRemainPersonalAllowance * 0.0875;
+      // Showing the calculation for dividend in Left Side Panel
+      this.taxOnDividendCalculation.answer =
+        "(£" +
+        dividend +
+        " - £2000 (Dividend Allowance) - £" +
+        remainPersonalAllowanceValue01 +
+        " (Remain Personal Allowance)) * 8.75%";
+      this.taxOnDividendCalculation.status = "calculated";
       // The basic rate tax band for interest is 20%,
       // which is treating interest as normal income.
       // The personal savings allowance for basic rate is 1000,
@@ -293,9 +383,35 @@ class Taxpayer {
         interestAfterPersonalSavingsAllowance,
         startingRateForSavings
       );
+      // Find out the the remain Personal Allowance
+      // this method is similar with dividendAfterRemainPersonalAllowance
+      // The only different is this method is finding the remaining,
+      // while dividendAfterRemainPersonalAllowance is finding the deducted value.
+      var remainPersonalAllowanceValue02 = remainPersonalAllowance(
+        dividendAfterAllowance,
+        remainPersonalAllowanceValue01
+      );
+
+      // Deduct remain Personal Allowance if applicable
+      // to get the interest to be taxed.
+      var interestAfterPersonalAllowance = deductAllowance(
+        interestAfterStartingRateForSavings,
+        remainPersonalAllowanceValue02
+      );
       // The basic rate tax band for interest is 20%,
       // which is treating interest as normal income.
-      taxOnInterest = interestAfterStartingRateForSavings * 0.2;
+      taxOnInterest = interestAfterPersonalAllowance * 0.2;
+      // Showing the calculation for interest in Left Side Panel
+      this.taxOnInterestCalculation.answer =
+        "(£" +
+        interest +
+        " - £" +
+        startingRateForSavings +
+        " (Starting rate for savings)" +
+        " - £1000 (Personal Saving Allowance) - £" +
+        remainPersonalAllowanceValue02 +
+        " (Remain Personal Allowance)) * 20%";
+      this.taxOnInterestCalculation.status = "calculated";
     } else if (totalIncome > 50270 && totalIncome <= 125140) {
       // Apply higher rate
 
@@ -309,10 +425,19 @@ class Taxpayer {
       // the income between 50270 and personal allowance is taxed at 20%.
       taxOnNonSavingsIncome =
         (nonSavingsIncome - 50270) * 0.4 + (50270 - personalAllowance) * 0.2;
-
+      // Showing the calculation for non-savings income in Left Side Panel
+      this.taxOnNonSavingsIncomeCalculation.answer =
+        "(£" +
+        nonSavingsIncome +
+        " - £50270) * 40% + (£50270 - Personal Allowance) * 20%";
+      this.taxOnNonSavingsIncomeCalculation.status = "calculated";
       // The higher rate tax band for dividend is 33.75%,
       // deduct dividend allowance to get the dividend to be taxed.
       taxOnDividend = deductAllowance(dividend, 2000) * 0.3375;
+      // Showing the calculation for dividend in Left Side Panel
+      this.taxOnDividendCalculation.answer =
+        "(£" + dividend + " - Dividend Allowance) * 33.75%";
+      this.taxOnDividendCalculation.status = "calculated";
 
       // The starting rate for savings is 0 for higher rate tax band,
       // which is not included in the calculation.
@@ -325,6 +450,9 @@ class Taxpayer {
       // The higher rate tax band for interest is 40%,
       // which is treating interest as normal income.
       taxOnInterest = interestAfterPersonalSavingsAllowance * 0.4;
+      // Showing the calculation for interest in Left Side Panel
+      this.taxOnInterestCalculation.answer = "(£" + interest + " - £500) * 40%";
+      this.taxOnInterestCalculation.status = "calculated";
     } else if (totalIncome > 125140) {
       // Apply additional rate
 
@@ -342,10 +470,19 @@ class Taxpayer {
         (nonSavingsIncome - 125140) * 0.45 +
         (125140 - 50270) * 0.4 +
         (50270 - personalAllowance) * 0.2;
-
+      // Showing the calculation for non-savings income in Left Side Panel
+      this.taxOnNonSavingsIncomeCalculation.answer =
+        "(£" +
+        nonSavingsIncome +
+        " - £125140) * 45% + (£125140 - £50270) * 40% + (£50270 - Personal Allowance) * 20%";
+      this.taxOnNonSavingsIncomeCalculation.status = "calculated";
       // The additional rate tax band for dividend is 39.35%,
       // deduct dividend allowance to get the dividend to be taxed.
       taxOnDividend = deductAllowance(dividend, 2000) * 0.3935;
+      // Showing the calculation for dividend in Left Side Panel
+      this.taxOnDividendCalculation.answer =
+        "(£" + dividend + " - Dividend Allowance) * 39.35%";
+      this.taxOnDividendCalculation.status = "calculated";
 
       // The starting rate for savings is 0 for additional rate tax band,
       // which is not included in the calculation.
@@ -357,7 +494,12 @@ class Taxpayer {
       // The additional rate tax band for interest is 45%,
       // which is treating interest as normal income.
       taxOnInterest = interest * 0.45;
+      // Showing the calculation for interest in Left Side Panel
+      this.taxOnInterestCalculation.answer = "£" + interest + " * 45%";
+      this.taxOnInterestCalculation.status = "calculated";
     }
+    this.totalIncome.answer = totalIncome;
+    this.totalIncome.status = "calculated";
     this.nonSavingsIncome.answer = nonSavingsIncome;
     this.nonSavingsIncome.status = "calculated";
     this.taxOnNonSavingsIncome.answer = taxOnNonSavingsIncome;
@@ -571,8 +713,8 @@ function App() {
     var scroll = document.getElementById("dialogue-section");
     scroll.scrollTop = scroll.scrollHeight;
   }
-  // This function find the start date after the arrival date.
-  // However, if the start date is sooner than the start of the tax year,
+  // This function find the start date on or after the arrival date.
+  // If the start date is sooner than the start of the tax year,
   // It will return the start date of the tax year instead.
   function findStartDateOfTaxYear(input) {
     var arrivalDate = new Date(input);
