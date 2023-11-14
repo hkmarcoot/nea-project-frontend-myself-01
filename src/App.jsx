@@ -97,10 +97,50 @@ class Taxpayer {
       },
     };
     this.numOfDaysFromArrival = newUser.numOfDaysFromArrival || 0;
-    this.income = newUser.income || {};
-    this.part1total = newUser.part1total || 0;
-    this.part2total = newUser.part2total || 0;
-    this.taxPaid = newUser.taxPaid || 0;
+    // this.income = newUser.income || {};
+    this.wages = newUser.wages || { status: "pending", answer: 0 };
+    this.tradingBeforeAllowance = newUser.tradingBeforeAllowance || {
+      status: "pending",
+      answer: 0,
+    };
+    this.tradingAfterAllowance = newUser.tradingAfterAllowance || {
+      status: "pending",
+      answer: 0,
+    };
+    this.propertyBeforeAllowance = newUser.propertyBeforeAllowance || {
+      status: "pending",
+      answer: 0,
+    };
+    this.propertyAfterAllowance = newUser.propertyAfterAllowance || {
+      status: "pending",
+      answer: 0,
+    };
+    this.nonSavingsIncome = newUser.nonSavingsIncome || {
+      status: "pending",
+      answer: 0,
+    };
+    this.taxOnNonSavingsIncome = newUser.taxOnNonSavingsIncome || {
+      status: "pending",
+      answer: 0,
+    };
+    this.dividend = newUser.dividend || { status: "pending", answer: 0 };
+    this.taxOnDividend = newUser.taxOnDividend || {
+      status: "pending",
+      answer: 0,
+    };
+    this.interest = newUser.interest || { status: "pending", answer: 0 };
+    this.taxOnInterest = newUser.taxOnInterest || {
+      status: "pending",
+      answer: 0,
+    };
+    this.taxPaid = newUser.taxPaid || {
+      status: "pending",
+      answer: 0,
+    };
+    this.band = newUser.band || {
+      status: "pending",
+      answer: "",
+    };
   }
 
   checkValidDateFormat(input) {
@@ -150,13 +190,178 @@ class Taxpayer {
 
   // calculatePart2(income) {}
 
+  // calculateTaxPaid() {
+  //   var newArr = [
+  //     ...Object.values(this.taxpayerAnswer).slice(0, 4),
+  //     ...Object.values(this.taxpayerAnswer).slice(5),
+  //   ];
+  //   var sum = newArr.reduce((a, b) => a + b.answer, 0) + 1000;
+  //   this.taxPaid = sum;
+  // }
   calculateTaxPaid() {
-    var newArr = [
-      ...Object.values(this.taxpayerAnswer).slice(0, 4),
-      ...Object.values(this.taxpayerAnswer).slice(5),
-    ];
-    var sum = newArr.reduce((a, b) => a + b.answer, 0) + 1000;
-    this.taxPaid = sum;
+    var arr = Object.values(this.taxpayerAnswer);
+    // deductAllowance can be used
+    // for trading allowance, property allowance,
+    // and dividend allowance
+    function deductAllowance(income, allowance) {
+      if (income <= allowance) {
+        return 0;
+      } else {
+        return income - allowance;
+      }
+    }
+
+    var wages = arr[0].answer;
+    this.wages.answer = wages;
+    this.wages.status = "calculated";
+
+    var trading = arr[1].answer + arr[2].answer + arr[5].answer + arr[6].answer;
+    this.tradingBeforeAllowance.answer = trading;
+    this.tradingAfterAllowance.answer = deductAllowance(trading, 1000);
+    this.tradingBeforeAllowance.status = "calculated";
+    this.tradingAfterAllowance.status = "calculated";
+
+    var property = arr[3].answer + arr[9].answer;
+    this.propertyBeforeAllowance.answer = property;
+    this.propertyAfterAllowance.answer = deductAllowance(property, 1000);
+    this.propertyBeforeAllowance.status = "calculated";
+    this.propertyAfterAllowance.status = "calculated";
+
+    var dividend = arr[8].answer + arr[11].answer;
+    var interest = arr[7].answer + arr[10].answer;
+
+    var totalIncome =
+      wages +
+      deductAllowance(trading, 1000) +
+      deductAllowance(property, 1000) +
+      dividend +
+      interest;
+
+    var personalAllowance = 12570;
+    if (totalIncome <= personalAllowance) {
+      // this.taxPaid.answer = 0;
+      // this.taxPaid.status = "calculated";
+      var nonSavingsIncome = totalIncome - dividend - interest;
+      // Zero tax rate for non-savings income within personal allowance
+      var taxOnNonSavingsIncome = 0;
+      // Zero tax rate for dividend within personal allowance
+      var taxOnDividend = 0;
+      // Zero tax rate for interest within personal allowance
+      var taxOnInterest = 0;
+      // The band is personal allowance
+      var band = "Personal Allowance";
+    } else if (totalIncome > personalAllowance && totalIncome <= 50270) {
+      // Apply basic rate
+
+      // Total income minus personal allowance is taxable income
+      // minus dividend and interest to get the wage to be taxed.
+      // Please refer to the example in https://www.gov.uk/tax-on-dividends
+      nonSavingsIncome = totalIncome - dividend - interest;
+      taxOnNonSavingsIncome = (nonSavingsIncome - personalAllowance) * 0.2;
+      // The basic rate tax band for dividend is 8.75%,
+      // deduct dividend allowance to get the dividend to be taxed.
+      taxOnDividend = deductAllowance(dividend, 2000) * 0.0875;
+      // The basic rate tax band for interest is 20%,
+      // which is treating interest as normal income.
+      // The personal savings allowance for basic rate is 1000,
+      // and starting rate for savings is to be calculated,
+      // please refer to the example in https://www.gov.uk/apply-tax-free-interest-on-savings
+      var otherIncomeForTaxOnInterest = totalIncome - interest;
+      var remaining = otherIncomeForTaxOnInterest - personalAllowance;
+      // 5000 is the maximum of starting rate for savings
+      // The if statement is to find out the starting rate for savings
+      if (remaining > 5000) {
+        var startingRateForSavings = 0;
+      } else {
+        startingRateForSavings = 5000 - remaining;
+      }
+      // The interest deducts the personal savings allowance,
+      // which is 1000 for basic rate tax band
+      var interestAfterPersonalSavingsAllowance = deductAllowance(
+        interest,
+        1000
+      );
+      // The above value deducts the calculated starting rate for savings
+      var interestAfterStartingRateForSavings = deductAllowance(
+        interestAfterPersonalSavingsAllowance,
+        startingRateForSavings
+      );
+      // The basic rate tax band for interest is 20%,
+      // which is treating interest as normal income.
+      taxOnInterest = interestAfterStartingRateForSavings * 0.2;
+      // The band is basic rate
+      band = "Basic Rate";
+    } else if (totalIncome > 50270 && totalIncome <= 125140) {
+      // Apply higher rate
+
+      // Higher rate tax band is 40% for wage between 50270 and 125140
+      // Basic rate tax band is 20% for wage between 12570 and 50270
+      nonSavingsIncome = totalIncome - dividend - interest;
+      taxOnNonSavingsIncome =
+        (nonSavingsIncome - 50270) * 0.4 + (50270 - personalAllowance) * 0.2;
+
+      // The higher rate tax band for dividend is 33.75%,
+      // deduct dividend allowance to get the dividend to be taxed.
+      taxOnDividend = deductAllowance(dividend, 2000) * 0.3375;
+
+      // The starting rate for savings is 0 for higher rate tax band,
+      // which is not included in the calculation.
+      // startingRateForSavings = 0;
+
+      // The interest deducts the personal savings allowance,
+      // which is 500 for higher rate tax band
+      interestAfterPersonalSavingsAllowance = deductAllowance(interest, 500);
+
+      // The higher rate tax band for interest is 40%,
+      // which is treating interest as normal income.
+      taxOnInterest = interestAfterPersonalSavingsAllowance * 0.4;
+      // The band is higher rate
+      band = "Higher Rate";
+    } else if (totalIncome > 125140) {
+      // Apply additional rate
+
+      // Additional rate tax band is 45% for wage above 125140
+      // Higher rate tax band is 40% for wage between 50270 and 125140
+      // Basic rate tax band is 20% for wage between 12570 and 50270
+      nonSavingsIncome = totalIncome - dividend - interest;
+      taxOnNonSavingsIncome =
+        (nonSavingsIncome - 125140) * 0.45 +
+        (125140 - 50270) * 0.4 +
+        (50270 - personalAllowance) * 0.2;
+
+      // The additional rate tax band for dividend is 39.35%,
+      // deduct dividend allowance to get the dividend to be taxed.
+      taxOnDividend = deductAllowance(dividend, 2000) * 0.3935;
+
+      // The starting rate for savings is 0 for additional rate tax band,
+      // which is not included in the calculation.
+      // startingRateForSavings = 0;
+
+      // The personal savings allowance is 0 for additional rate tax band,
+      // which is not included in the calculation.
+
+      // The additional rate tax band for interest is 45%,
+      // which is treating interest as normal income.
+      taxOnInterest = interest * 0.45;
+      // The band is additional rate
+      band = "Additional Rate";
+    }
+    this.nonSavingsIncome.answer = nonSavingsIncome;
+    this.nonSavingsIncome.status = "calculated";
+    this.taxOnNonSavingsIncome.answer = taxOnNonSavingsIncome;
+    this.taxOnNonSavingsIncome.status = "calculated";
+    this.dividend.answer = dividend;
+    this.dividend.status = "calculated";
+    this.taxOnDividend.answer = taxOnDividend;
+    this.taxOnDividend.status = "calculated";
+    this.interest.answer = interest;
+    this.interest.status = "calculated";
+    this.taxOnInterest.answer = taxOnInterest;
+    this.taxOnInterest.status = "calculated";
+    this.taxPaid.answer = taxOnNonSavingsIncome + taxOnDividend + taxOnInterest;
+    this.taxPaid.status = "calculated";
+    this.band.answer = band;
+    this.band.status = "calculated";
   }
 
   setName(answer) {
