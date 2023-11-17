@@ -340,7 +340,8 @@ class Taxpayer {
       // The personal savings allowance for basic rate is 1000,
       // and starting rate for savings is to be calculated,
       // please refer to the example in https://www.gov.uk/apply-tax-free-interest-on-savings
-      var otherIncomeForTaxOnInterest = totalIncome - interest;
+      // and the example in https://www.litrg.org.uk/tax-guides/tax-basics/what-tax-rates-apply-me#:~:text=The%20starting%20rate%20for%20savings%20band%20is%20%C2%A35%2C000%20for,is%20taxed%20after%20savings%20income.
+      var otherIncomeForTaxOnInterest = totalIncome - dividend - interest;
       // 5000 is the maximum of starting rate for savings
       // The if statement is to find out the starting rate for savings
       if (otherIncomeForTaxOnInterest <= 12570) {
