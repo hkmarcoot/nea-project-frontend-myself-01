@@ -38,10 +38,26 @@ function Header({
           data[i].name,
           data[i].surveyResult,
           data[i].taxpayerAnswer,
-          data[i].income,
-          data[i].part1total,
-          data[i].part2total,
-          data[i].taxPaid
+          data[i].numOfDaysFromArrival,
+          data[i].wages,
+          data[i].tradingBeforeAllowance,
+          data[i].tradingAfterAllowance,
+          data[i].tradingAllowanceApplied,
+          data[i].propertyBeforeAllowance,
+          data[i].propertyAfterAllowance,
+          data[i].propertyAllowanceApplied,
+          data[i].totalIncome,
+          data[i].nonSavingsIncome,
+          data[i].taxOnNonSavingsIncome,
+          data[i].taxOnNonSavingsIncomeCalculation,
+          data[i].dividend,
+          data[i].taxOnDividend,
+          data[i].taxOnDividendCalculation,
+          data[i].interest,
+          data[i].taxOnInterest,
+          data[i].taxOnInterestCalculation,
+          data[i].taxPaid,
+          data[i].band
         );
       }
     };
