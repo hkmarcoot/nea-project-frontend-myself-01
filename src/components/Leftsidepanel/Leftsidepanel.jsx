@@ -13,18 +13,12 @@ function Leftsidepanel({
   const sum = sumOfUserAnswer();
 
   function sumOfUserAnswer() {
-    // var sum = 0;
-    // for (property in userAnswer) {
-    //   sum += userAnswer[property].answer;
-    // }
-    // return sum;
-
     // Remove the 5th element in the array
     var newArr = [
       ...Object.values(userAnswer).slice(0, 4),
       ...Object.values(userAnswer).slice(5),
     ];
-    // return Object.values(userAnswer).reduce((a, b) => a + b.answer, 0);
+
     return newArr.reduce((a, b) => a + b.answer, 0);
   }
 

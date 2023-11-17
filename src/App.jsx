@@ -4,7 +4,6 @@ import Header from "./components/Header/Header";
 import Leftsidepanel from "./components/Leftsidepanel/Leftsidepanel";
 import Rightsidepanel from "./components/Rightsidepanel/Rightsidepanel";
 import Reportsection from "./components/Reportsection/Reportsection";
-// import { list } from "postcss";
 
 class Taxpayer {
   constructor(newUser = {}) {
@@ -205,14 +204,6 @@ class Taxpayer {
     }
   }
 
-  // calculateTaxPaid() {
-  //   var newArr = [
-  //     ...Object.values(this.taxpayerAnswer).slice(0, 4),
-  //     ...Object.values(this.taxpayerAnswer).slice(5),
-  //   ];
-  //   var sum = newArr.reduce((a, b) => a + b.answer, 0) + 1000;
-  //   this.taxPaid = sum;
-  // }
   calculateTaxPaid() {
     // Convert the taxpayerAnswer object to an array
     var arr = Object.values(this.taxpayerAnswer);
@@ -896,9 +887,6 @@ function App() {
   function findStartDateOfTaxYear(input) {
     var arrivalDate = new Date(input);
     var startDateOfTaxYear = new Date("04/06/2022");
-    // var DateAfter183Days = new Date(
-    //   arrivalDate.getTime() + 183 * (1000 * 3600 * 24)
-    // );
     var timeDiff = arrivalDate.getTime() - startDateOfTaxYear.getTime();
     // This function add '0' in front of the month or date if it is a single digit
     function formatMonthOrDate(input) {
@@ -923,10 +911,9 @@ function App() {
   // Hence the function below can skip checking whether
   // the input is before the start date or not
   function isStartDateWithinTaxYear2022To2023(input) {
-    // var startDateOfTaxYear = new Date("04/06/2022");
     var EndDateOfTaxYear = new Date("04/05/2023");
     var inputDate = new Date(input);
-    // var timeDiffWithStartDate = inputDate.getTime() - startDateOfTaxYear.getTime();
+
     var timeDiffWithEndDate = inputDate.getTime() - EndDateOfTaxYear.getTime();
 
     if (timeDiffWithEndDate > 0) {
@@ -1112,7 +1099,6 @@ function App() {
       setCount(2);
       currentStage = 1;
       currentCount = 2;
-      // addChatBotQuestion("Success");
     } else if (
       // Situation for the user does not input yes or no in 2nd question
       // given that number of days from arrival is less than 183
