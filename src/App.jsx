@@ -763,57 +763,58 @@ function App() {
     ],
     [
       {
-        question: "How much you earn from being in employment in the UK?",
+        question: "How much did you earn from being in employment in the UK?",
         answerType: "floatNumber",
       },
       {
         question:
-          "How much you earn from being self-employed excluding the foreign income?",
+          "How much did you earn from being self-employed excluding the foreign income?",
         answerType: "floatNumber",
       },
       {
-        question: "How much you earn from freelance work?",
-        answerType: "floatNumber",
-      },
-      {
-        question:
-          "How much you earn from rental income, where the properties are in the UK? (Please add together your rental incomes and deduct any expenses.)",
+        question: "How much did you earn from freelance work?",
         answerType: "floatNumber",
       },
       {
         question:
-          "Do you have any foregin income? Any income that generated outside the UK is counted as foregin income, which includes: Profit generated from your company outside the UK, interest from overseas bank and building society accounts, dividends and interest from overseas companies, rent from overseas properties, wages, benefits or royalties from working abroad, pensions you receive from abroad, income from a trust based abroad, income from a life insurance policy.",
+          "How much did you earn from rental income, where the properties were in the UK? (Please add together your rental incomes and deduct any expenses.)",
+        answerType: "floatNumber",
+      },
+      {
+        question:
+          "Did you have any foregin income? Any income that generated outside the UK was counted as foregin income, which includes: Profit generated from your company outside the UK, interest from overseas bank and building society accounts, dividends and interest from overseas companies, rent from overseas properties, wages, benefits or royalties from working abroad, pensions you receive from abroad, income from a trust based abroad, income from a life insurance policy.",
         answerType: "boolean",
       },
       {
-        question: "How much you earn from your oversea company?",
+        question: "How much did you earn from your oversea company?",
         answerType: "floatNumber",
       },
       {
-        question: "How much you earn from your job outside the UK?",
-        answerType: "floatNumber",
-      },
-      {
-        question:
-          "How much you earn from the oversea interest i.e. from bank, securities company, insurance company?",
+        question: "How much did you earn from your job outside the UK?",
         answerType: "floatNumber",
       },
       {
         question:
-          "How much you earn from the oversea dividend i.e. from stock, insurance company?",
-        answerType: "floatNumber",
-      },
-      {
-        question: "How much you earn from the rental income outside the UK?",
+          "How much did you earn from the oversea interest i.e. from bank, securities company, insurance company?",
         answerType: "floatNumber",
       },
       {
         question:
-          "How much you earn from the interest in your savings in the UK?",
+          "How much did you earn from the oversea dividend i.e. from stock, insurance company?",
         answerType: "floatNumber",
       },
       {
-        question: "How much you earn from the dividend in the UK?",
+        question:
+          "How much did you earn from the rental income outside the UK?",
+        answerType: "floatNumber",
+      },
+      {
+        question:
+          "How much did you earn from the interest in your savings in the UK?",
+        answerType: "floatNumber",
+      },
+      {
+        question: "How much did you earn from the dividend in the UK?",
         answerType: "floatNumber",
       },
     ],
