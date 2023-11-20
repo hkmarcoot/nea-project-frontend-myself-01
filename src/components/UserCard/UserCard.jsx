@@ -2,7 +2,6 @@ export default function UserCard({
   index,
   name,
   setUserIndex,
-  // setIsStateUpdated,
   listofUsers,
   userIndex,
   setListofUsers,
@@ -40,7 +39,6 @@ export default function UserCard({
           findNextQuestionAndAsk(index);
         }}
       >
-        {/* <p>index: {index}</p> */}
         {index === userIndex ? (
           <p className="font-bold py-2">{name}</p>
         ) : (
@@ -52,7 +50,6 @@ export default function UserCard({
           <button
             className="py-0 px-1 mb-1"
             onClick={() => {
-              // setUserIndex(0);
               handleDeleteUser();
             }}
           >

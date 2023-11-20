@@ -47,11 +47,6 @@ function Rightsidepanel({
     var result = 0;
     // Add the number of questions in the previous stage
     for (var i = 0; i < stage; i++) {
-      // if (i === 0) {
-      //   result += botQuestion[0].length;
-      // } else if (i === 1) {
-      //   result += botQuestion[1].length;
-      // }
       result += botQuestion[i].length;
     }
     return result + count;
@@ -183,8 +178,6 @@ function Rightsidepanel({
       findQuestionIndex(stage, count) <
         [...botQuestion.flat(Infinity)].length &&
       isSurveyStart === true
-      // currentCount < Object.keys(botQuestion).length &&
-      // count < Object.keys(userAnswer).length
     ) {
       if (stage === 0 && count === 0) {
         listofUsers[userIndex].setName(input);
@@ -243,8 +236,6 @@ function Rightsidepanel({
       } else if (stage === 2 && count === 4) {
         // Change from using useState to calling the method
         // directly from the list of object
-        // console.log("stage: " + stage + ", count: " + count);
-        // console.log("Start with: " + findQuestionIndex(stage, count));
 
         if (booleanTrue.includes(input.toLowerCase())) {
           listofUsers[userIndex].setTaxpayerAnswer(count, true);
