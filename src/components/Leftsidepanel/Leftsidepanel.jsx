@@ -226,7 +226,7 @@ function Leftsidepanel({
           setIsStateUpdated(true);
         }}
       >
-        Calculate TaxPaid
+        Calculate Tax
       </button>
       {listofUsers[userIndex].wages.status === "calculated" ? (
         <p>Wages: £{listofUsers[userIndex].wages.answer}</p>
@@ -328,7 +328,7 @@ function Leftsidepanel({
           <p>---------------------------------------------</p>
         </>
       ) : null}
-      <p>Total Tax Paid: £{taxPaid.answer}</p>
+      <p>Total Tax: £{taxPaid.answer}</p>
     </div>
   );
 }

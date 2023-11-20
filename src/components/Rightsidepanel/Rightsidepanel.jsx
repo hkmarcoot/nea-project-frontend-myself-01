@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { sentenceBank, botPreMadeReply } from "../PreMadeReply/PreMadeReply";
 function Rightsidepanel({
   userIndex,
   listofUsers,
@@ -8,6 +9,8 @@ function Rightsidepanel({
   botQuestion,
   addChatBotQuestion,
   findNextQuestionAndAsk,
+  isSurveyStart,
+  setIsSurveyStart,
 }) {
   const [newItem, setNewItem] = useState("");
 
@@ -51,10 +54,59 @@ function Rightsidepanel({
   }
 
   function startAdvisorChat() {
-    if (listofUsers[userIndex].name === "New User") {
+    setIsSurveyStart(true);
+    if (
+      listofUsers[userIndex].getSurveyResultStatus() === "answered" &&
+      listofUsers[userIndex].isAllTaxpayerAnswerStatusAnswered()
+    ) {
+      // If the user have answered the survey,
+      // tell them they have already completed the survey.
+      addChatBotQuestion(
+        "You have already answered the survey. Please press 'Calculate Tax' to calculate your tax."
+      );
+    } else if (listofUsers[userIndex].name === "New User") {
       addChatBotQuestion(botQuestion[0][0].question);
     } else {
       addChatBotQuestion(botQuestion[1][0].question);
+    }
+  }
+
+  function findFromSentenceBank(sentenceBank, text, start, end) {
+    // This is binary search in recursive method
+
+    // Case that finish the searching and not found
+    if (start > end) return "Not found from sentence bank";
+
+    // Find the middle index
+    var middleIndex = Math.floor((start + end) / 2);
+
+    // Compare sentence at middle index with text
+    if (sentenceBank[middleIndex] === text) return middleIndex;
+
+    // If sentence at middle index is alphabetically greater than the text,
+    // search in the upper half of middle index
+    if (sentenceBank[middleIndex] > text) {
+      return findFromSentenceBank(sentenceBank, text, start, middleIndex - 1);
+    } else {
+      // If sentence at middle index is alphabetically less than the text,
+      // search in the lower half of middle index
+      return findFromSentenceBank(sentenceBank, text, middleIndex + 1, end);
+    }
+  }
+
+  function PreMadeChatbot(sentenceBank, text) {
+    var result = findFromSentenceBank(
+      sentenceBank,
+      text,
+      0,
+      sentenceBank.length - 1
+    );
+    if (result === "Not found from sentence bank") {
+      return addChatBotQuestion(
+        "Question not found from Pre-made database. Please ask other question or switch to ChatGPT. To calculate tax, please press 'Start Advisor Chat' to begin the survey."
+      );
+    } else {
+      return addChatBotQuestion(botPreMadeReply[result]);
     }
   }
 
@@ -67,7 +119,15 @@ function Rightsidepanel({
       // currentCount < Object.keys(botQuestion).length &&
       // count < Object.keys(userAnswer).length
     ) {
-      if (stage === 0 && count === 0) {
+      if (stage === 0 && count === 0 && isSurveyStart === false) {
+        // Handle the situation user haven't press the 'Start Advisor Chat' button
+        var inputToPreMadeChatbot = input.replace(/[_]/g, " ");
+        inputToPreMadeChatbot = inputToPreMadeChatbot.replace(/[?]/g, "");
+        inputToPreMadeChatbot = inputToPreMadeChatbot.toLowerCase();
+        PreMadeChatbot(sentenceBank, inputToPreMadeChatbot);
+        // Remove text in the chat box
+        setNewItem("");
+      } else if (stage === 0 && count === 0 && isSurveyStart === true) {
         listofUsers[userIndex].setName(input);
       } else if (stage === 1 && count === 0) {
         listofUsers[userIndex].setSurveyResult(count, input);

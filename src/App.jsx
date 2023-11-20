@@ -736,6 +736,7 @@ function App() {
   const [stage, setStage] = useState(0);
   const [count, setCount] = useState(0);
   const [isImport, setIsImport] = useState(false);
+  const [isSurveyStart, setIsSurveyStart] = useState(false);
 
   const botQuestion = [
     [
@@ -882,6 +883,10 @@ function App() {
     });
     setListofUsers((prevList) => [...prevList, newUser]);
 
+    // Let the app start the survey after the user is created
+    // either from the importing or from the create new user button
+    setIsSurveyStart(true);
+
     // If create new user is not from import
     // ask first question when the user is created
     if (!isImport) {
@@ -1024,7 +1029,10 @@ function App() {
     // ****** Function that reuses the code end ******//
 
     // Apply the stage and count index numbering logic
-    if (
+    if (isSurveyStart === false) {
+      // If the survey is not started yet
+      // Do nothing.
+    } else if (
       // Check if the user is new and the surveyResult is pending
       listofUsers[index].getSurveyResultStatus() === "pending"
     ) {
@@ -1215,7 +1223,9 @@ function App() {
       listofUsers[index].isAllTaxpayerAnswerStatusAnswered()
     ) {
       // console.log("End with: " + findQuestionIndex(stage, count));
-      addChatBotQuestion("End of Question");
+      addChatBotQuestion(
+        "You have answered all the questions in the survey. Please press 'Calculate Tax' button to calculate your tax."
+      );
       // Stop user changing the last item in stage 2
       // by setting the stage to 3
       // where stage 3 do not exist
@@ -1263,6 +1273,8 @@ function App() {
           botQuestion={botQuestion}
           addChatBotQuestion={addChatBotQuestion}
           findNextQuestionAndAsk={findNextQuestionAndAsk}
+          isSurveyStart={isSurveyStart}
+          setIsSurveyStart={setIsSurveyStart}
         />
       </div>
       <Reportsection />
