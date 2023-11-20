@@ -1032,8 +1032,10 @@ function App() {
     // Ask user to enter number for the question
     // in stage 2 and count 0 - 11 expect 4
     if ((stage === 2 && count <= 3) || (stage === 2 && count >= 5)) {
-      if (typeof input != "number") {
-        addChatBotQuestion("Please enter a number.");
+      if (input) {
+        if (typeof input != "number") {
+          addChatBotQuestion("Please enter a number.");
+        }
       }
     }
     /* ****** Case for error handling end ****** */
