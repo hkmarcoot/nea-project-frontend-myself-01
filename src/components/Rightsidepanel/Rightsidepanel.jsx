@@ -54,20 +54,29 @@ function Rightsidepanel({
   }
 
   function startAdvisorChat() {
-    setIsSurveyStart(true);
-    if (
-      listofUsers[userIndex].getSurveyResultDateStatus() === "answered" &&
-      listofUsers[userIndex].isAllTaxpayerAnswerStatusAnswered()
-    ) {
-      // If the user have answered the survey,
-      // tell them they have already completed the survey.
+    // Check if whether isSurveyStart is false before change it to true
+    if (isSurveyStart === false) {
+      setIsSurveyStart(true);
+      if (
+        listofUsers[userIndex].getSurveyResultDateStatus() === "answered" &&
+        listofUsers[userIndex].isAllTaxpayerAnswerStatusAnswered()
+      ) {
+        // If the user have answered the survey,
+        // tell them they have already completed the survey.
+        addChatBotQuestion(
+          "You have already answered the survey. Please press 'Calculate Tax' to calculate your tax."
+        );
+      } else if (listofUsers[userIndex].name === "New User") {
+        addChatBotQuestion(botQuestion[0][0].question);
+      } else {
+        addChatBotQuestion(botQuestion[stage][count].question);
+      }
+      // Check if whether isSurveyStart is true before change it to false
+    } else if (isSurveyStart === true) {
+      setIsSurveyStart(false);
       addChatBotQuestion(
-        "You have already answered the survey. Please press 'Calculate Tax' to calculate your tax."
+        "Please ask me a question for receiving pre-made reply."
       );
-    } else if (listofUsers[userIndex].name === "New User") {
-      addChatBotQuestion(botQuestion[0][0].question);
-    } else {
-      addChatBotQuestion(botQuestion[stage][count].question);
     }
   }
 
@@ -102,11 +111,9 @@ function Rightsidepanel({
       sentenceBank.length - 1
     );
     if (result === "Not found from sentence bank") {
-      return addChatBotQuestion(
-        "Question not found from Pre-made database. Please ask other question or switch to ChatGPT. To calculate tax, please press 'Start Advisor Chat' to begin the survey."
-      );
+      return "Question not found from Pre-made database. Please ask other question or switch to ChatGPT. To calculate tax, please press 'Start Advisor Chat' to begin the survey.";
     } else {
-      return addChatBotQuestion(botPreMadeReply[result]);
+      return botPreMadeReply[result];
     }
   }
 
@@ -115,19 +122,14 @@ function Rightsidepanel({
     var booleanFalse = ["no", "n", "false", "f"];
     if (
       // Check if the index is still within the range of the botQuestion
-      findQuestionIndex(stage, count) < [...botQuestion.flat(Infinity)].length
+      // and check if the user have pressed the 'Start Advisor Chat' button
+      findQuestionIndex(stage, count) <
+        [...botQuestion.flat(Infinity)].length &&
+      isSurveyStart === true
       // currentCount < Object.keys(botQuestion).length &&
       // count < Object.keys(userAnswer).length
     ) {
-      if (stage === 0 && count === 0 && isSurveyStart === false) {
-        // Handle the situation user haven't press the 'Start Advisor Chat' button
-        var inputToPreMadeChatbot = input.replace(/[_]/g, " ");
-        inputToPreMadeChatbot = inputToPreMadeChatbot.replace(/[?]/g, "");
-        inputToPreMadeChatbot = inputToPreMadeChatbot.toLowerCase();
-        PreMadeChatbot(sentenceBank, inputToPreMadeChatbot);
-        // Remove text in the chat box
-        setNewItem("");
-      } else if (stage === 0 && count === 0 && isSurveyStart === true) {
+      if (stage === 0 && count === 0) {
         listofUsers[userIndex].setName(input);
       } else if (stage === 1 && count === 0) {
         listofUsers[userIndex].setSurveyResult(count, input);
@@ -223,6 +225,19 @@ function Rightsidepanel({
     // Display the User's answer on the Chat
     addChatUserAnswer(input);
 
+    // Output Pre-made reply.
+    // This section is located here because it needs to be after addChatUserAnswer()
+    // and it can use sentenceBank and setNewItem in the Rightsidepanel.jsx.
+    if (isSurveyStart === false) {
+      // Handle the situation user haven't press the 'Start Advisor Chat' button
+      var inputToPreMadeChatbot = input.replace(/[_]/g, " ");
+      inputToPreMadeChatbot = inputToPreMadeChatbot.replace(/[?]/g, "");
+      inputToPreMadeChatbot = inputToPreMadeChatbot.toLowerCase();
+      addChatBotQuestion(PreMadeChatbot(sentenceBank, inputToPreMadeChatbot));
+      // Remove text in the chat box
+      setNewItem("");
+    }
+
     // Go the findNextQuestionAndAsk() procedure
     findNextQuestionAndAsk(userIndex, input);
   }
@@ -243,12 +258,21 @@ function Rightsidepanel({
   return (
     <div className="w-1/2 bg-light-blue border-2">
       <div className="py-4">
-        <button
-          className="mx-6 md:w-36 lg:w-48"
-          onClick={() => startAdvisorChat()}
-        >
-          Start Advisor Chat
-        </button>
+        {isSurveyStart === false ? (
+          <button
+            className="mx-6 md:w-36 lg:w-48"
+            onClick={() => startAdvisorChat()}
+          >
+            Start Advisor Chat
+          </button>
+        ) : (
+          <button
+            className="mx-6 md:w-36 lg:w-48"
+            onClick={() => startAdvisorChat()}
+          >
+            Get Pre-made Reply
+          </button>
+        )}
         <button className="mx-6 md:w-32 lg:w-48" onClick={switchToChatGPT}>
           Switch to ChatGPT
         </button>
