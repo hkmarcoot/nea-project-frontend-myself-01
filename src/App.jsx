@@ -960,7 +960,7 @@ function App() {
   }
 
   // This subroutine is a procedure used by the Rightsidepanel and the UserCard in Header
-  function findNextQuestionAndAsk(index) {
+  function findNextQuestionAndAsk(index, input) {
     // ****** Function that reuses the code ****** //
     function classifiedAsUKResidentAndCheckStartDate() {
       var startDateOfTaxYear = findStartDateOfTaxYear(
@@ -1027,6 +1027,16 @@ function App() {
     }
 
     // ****** Function that reuses the code end ******//
+
+    /* ****** Case for error handling ****** */
+    // Ask user to enter number for the question
+    // in stage 2 and count 0 - 11 expect 4
+    if ((stage === 2 && count <= 3) || (stage === 2 && count >= 5)) {
+      if (typeof input != "number") {
+        addChatBotQuestion("Please enter a number.");
+      }
+    }
+    /* ****** Case for error handling end ****** */
 
     // Apply the stage and count index numbering logic
     if (isSurveyStart === false) {

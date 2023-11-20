@@ -170,8 +170,17 @@ function Rightsidepanel({
         if (isContainDollarSign(input)) {
           input = removeDollarSign(input);
         }
-        listofUsers[userIndex].setTaxpayerAnswer(count, parseFloat(input));
-        listofUsers[userIndex].setTaxpayerAnswerStatus(count, "answered");
+        var withoutDot = input.replace(/[.]/g, "");
+        if (/^\d+$/.test(withoutDot)) {
+          input = parseFloat(input);
+        }
+        if (typeof input === "number") {
+          // Save the user's answer if the input is a number
+          listofUsers[userIndex].setTaxpayerAnswer(count, input);
+          listofUsers[userIndex].setTaxpayerAnswerStatus(count, "answered");
+          // It will ask user to input a number if the user input is not a number
+          // This is programmed in findNextQuestionAndAsk()
+        }
       } else if (stage === 2 && count === 4) {
         // Change from using useState to calling the method
         // directly from the list of object
@@ -215,7 +224,7 @@ function Rightsidepanel({
     addChatUserAnswer(input);
 
     // Go the findNextQuestionAndAsk() procedure
-    findNextQuestionAndAsk(userIndex);
+    findNextQuestionAndAsk(userIndex, input);
   }
 
   function addChatUserAnswer(answer) {
