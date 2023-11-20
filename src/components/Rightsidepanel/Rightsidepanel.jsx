@@ -1,5 +1,11 @@
 import { useState } from "react";
 import { sentenceBank, botPreMadeReply } from "../PreMadeReply/PreMadeReply";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: "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",
+  dangerouslyAllowBrowser: true,
+});
 function Rightsidepanel({
   userIndex,
   listofUsers,
@@ -11,21 +17,32 @@ function Rightsidepanel({
   findNextQuestionAndAsk,
   isSurveyStart,
   setIsSurveyStart,
+  isChatGPT,
+  setIsChatGPT,
 }) {
   const [newItem, setNewItem] = useState("");
+  const [isChatGPTTyping, setIsChatGPTTyping] = useState(false);
 
   function sendMessage() {
     // const inputField = document.getElementById("input");
     // let input = inputField.value.trim();
     // input !== "" && output(input);
-    newItem !== "" && output(newItem);
+    if (isChatGPT === false) {
+      newItem !== "" && output(newItem);
+    } else {
+      newItem !== "" && chatGPTOutput(newItem);
+    }
     // inputField.value = "";
     setNewItem("");
   }
 
   function handleKeyDown(event) {
     if (event.key === "Enter") {
-      newItem !== "" && output(newItem);
+      if (isChatGPT === false) {
+        newItem !== "" && output(newItem);
+      } else {
+        newItem !== "" && chatGPTOutput(newItem);
+      }
       setNewItem("");
     }
   }
@@ -121,6 +138,41 @@ function Rightsidepanel({
     } else {
       return botPreMadeReply[result];
     }
+  }
+
+  async function chatGPTOutput(input) {
+    // Display the User's answer on the Chat
+    addChatUserAnswer(input);
+
+    // Let user know that the bot is typing
+    setIsChatGPTTyping(true);
+
+    // Set the contentMessage that will be submitted to ChatGPT
+    var contentMessage =
+      "This is a conversation about the UK tax in the tax year 2022/2023. The question is: " +
+      input +
+      ". Please answer the question within 50 words.";
+    // Output ChatGPT reply
+    await openai.chat.completions
+      .create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "user",
+            content: contentMessage,
+          },
+        ],
+      })
+      .then((res) => {
+        // Display the ChatGPT reply on the Chat
+        addChatBotQuestion(res.choices[0].message.content);
+
+        // Remove the ChatGPT is typing message
+        setIsChatGPTTyping(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function output(input) {
@@ -259,30 +311,92 @@ function Rightsidepanel({
     scroll.scrollTop = scroll.scrollHeight;
   }
 
-  function switchToChatGPT() {}
+  function switchToChatGPT() {
+    if (isChatGPT === false) {
+      addChatBotQuestion("Switch to ChatGPT. Please ask me a question.");
+    } else {
+      addChatBotQuestion(
+        "Switch to Advisor. Please continue your conversation."
+      );
+      // ****** This part is similar to startAdvisorChat() ****** //
+      // just that it will not change the isSurveyStart state.
+      // Check if whether isSurveyStart is true
+      if (isSurveyStart === true) {
+        if (
+          listofUsers[userIndex].getSurveyResultDateStatus() === "answered" &&
+          listofUsers[userIndex].isAllTaxpayerAnswerStatusAnswered()
+        ) {
+          // If the user have answered the survey,
+          // tell them they have already completed the survey.
+          addChatBotQuestion(
+            "You have already answered the survey. Please press 'Calculate Tax' to calculate your tax."
+          );
+        } else if (listofUsers[userIndex].name === "New User") {
+          addChatBotQuestion(botQuestion[0][0].question);
+        } else {
+          // Known bugs: It will keep asking the same Advisor question to other user
+          // if switching user while is still in pre-made reply mode.
+          // This happens because the isSurveyStart state is not updated yet,
+          // and hence getting the old stage and count value into the botQuestion.
+          // However, this bugs will not affect the calculation of tax.
+          // It will only affect the user experience.
+          addChatBotQuestion(botQuestion[stage][count].question);
+        }
+        // Check if whether isSurveyStart is false
+      } else if (isSurveyStart === false) {
+        addChatBotQuestion(
+          "Please ask me a question for receiving pre-made reply."
+        );
+      }
+      // ****** Part similar to startAdvisorChat() ends here ****** //
+    }
+
+    // Change the isChatGPT state
+    setIsChatGPT(!isChatGPT);
+  }
 
   return (
     <div className="w-1/2 bg-light-blue border-2">
-      <div className="py-4">
-        {isSurveyStart === false ? (
+      {isChatGPT === false ? (
+        <div className="py-4">
+          {isSurveyStart === false ? (
+            <button
+              className="mx-6 md:w-36 lg:w-48"
+              onClick={() => startAdvisorChat()}
+            >
+              Start Advisor Chat
+            </button>
+          ) : (
+            <button
+              className="mx-6 md:w-36 lg:w-48"
+              onClick={() => startAdvisorChat()}
+            >
+              Get Pre-made Reply
+            </button>
+          )}
           <button
-            className="mx-6 md:w-36 lg:w-48"
-            onClick={() => startAdvisorChat()}
+            className="mx-6 md:w-32 lg:w-48"
+            onClick={() => switchToChatGPT()}
           >
-            Start Advisor Chat
+            Switch to ChatGPT
           </button>
-        ) : (
-          <button
-            className="mx-6 md:w-36 lg:w-48"
-            onClick={() => startAdvisorChat()}
-          >
-            Get Pre-made Reply
-          </button>
-        )}
-        <button className="mx-6 md:w-32 lg:w-48" onClick={switchToChatGPT}>
-          Switch to ChatGPT
-        </button>
-      </div>
+        </div>
+      ) : (
+        <div className="flex flex-row justify-center items-center">
+          <div className="py-4">
+            <button
+              className="mx-6 md:w-32 lg:w-48"
+              onClick={() => switchToChatGPT()}
+            >
+              Back to Advisor
+            </button>
+          </div>
+          {isChatGPTTyping === true ? (
+            <div className="italic">Loading...</div>
+          ) : null}
+        </div>
+      )}
+
       <div
         id="dialogue-section"
         className="h-64  md:h-96 lg:h-104 text-left px-2 overflow-y-auto"

@@ -737,6 +737,7 @@ function App() {
   const [count, setCount] = useState(0);
   const [isImport, setIsImport] = useState(false);
   const [isSurveyStart, setIsSurveyStart] = useState(false);
+  const [isChatGPT, setIsChatGPT] = useState(false);
 
   const botQuestion = [
     [
@@ -1290,6 +1291,8 @@ function App() {
           findNextQuestionAndAsk={findNextQuestionAndAsk}
           isSurveyStart={isSurveyStart}
           setIsSurveyStart={setIsSurveyStart}
+          isChatGPT={isChatGPT}
+          setIsChatGPT={setIsChatGPT}
         />
       </div>
       <Reportsection />
