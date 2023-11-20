@@ -23,15 +23,11 @@ function Rightsidepanel({
   const [isChatGPTTyping, setIsChatGPTTyping] = useState(false);
 
   function sendMessage() {
-    // const inputField = document.getElementById("input");
-    // let input = inputField.value.trim();
-    // input !== "" && output(input);
     if (isChatGPT === false) {
       newItem !== "" && output(newItem);
     } else {
       newItem !== "" && chatGPTOutput(newItem);
     }
-    // inputField.value = "";
     setNewItem("");
   }
 
@@ -72,6 +68,7 @@ function Rightsidepanel({
   function startAdvisorChat() {
     // Check if whether isSurveyStart is false before change it to true
     if (isSurveyStart === false) {
+      // Set isSurveyStart to be true
       setIsSurveyStart(true);
       if (
         listofUsers[userIndex].getSurveyResultDateStatus() === "answered" &&
@@ -95,6 +92,7 @@ function Rightsidepanel({
       }
       // Check if whether isSurveyStart is true before change it to false
     } else if (isSurveyStart === true) {
+      // Set isSurveyStart to be false
       setIsSurveyStart(false);
       addChatBotQuestion(
         "Please ask me a question for receiving pre-made reply."
@@ -126,6 +124,8 @@ function Rightsidepanel({
   }
 
   function PreMadeChatbot(sentenceBank, text) {
+    // Initialze the binary search by putting the start index at 0
+    // and the end index at the last index of the sentenceBank
     var result = findFromSentenceBank(
       sentenceBank,
       text,
@@ -287,6 +287,8 @@ function Rightsidepanel({
     // and it can use sentenceBank and setNewItem in the Rightsidepanel.jsx.
     if (isSurveyStart === false) {
       // Handle the situation user haven't press the 'Start Advisor Chat' button
+      // Replace the underscore with space, remove the question mark and
+      // change the input to lowercase
       var inputToPreMadeChatbot = input.replace(/[_]/g, " ");
       inputToPreMadeChatbot = inputToPreMadeChatbot.replace(/[?]/g, "");
       inputToPreMadeChatbot = inputToPreMadeChatbot.toLowerCase();
