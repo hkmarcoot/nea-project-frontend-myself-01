@@ -694,7 +694,7 @@ class Taxpayer {
     this.surveyResult[questionNumber].answer = answer;
   }
 
-  getSurveyResultStatus() {
+  getSurveyResultDateStatus() {
     return this.surveyResult[0].status;
   }
 
@@ -1044,7 +1044,7 @@ function App() {
       // Do nothing.
     } else if (
       // Check if the user is new and the surveyResult is pending
-      listofUsers[index].getSurveyResultStatus() === "pending"
+      listofUsers[index].getSurveyResultDateStatus() === "pending"
     ) {
       // Set the stage and count to 1 and 0 respectively
       setStage(1);
@@ -1229,7 +1229,7 @@ function App() {
 
     if (
       // End the chat when the all question answered
-      listofUsers[index].getSurveyResultStatus() === "answered" &&
+      listofUsers[index].getSurveyResultDateStatus() === "answered" &&
       listofUsers[index].isAllTaxpayerAnswerStatusAnswered()
     ) {
       // console.log("End with: " + findQuestionIndex(stage, count));

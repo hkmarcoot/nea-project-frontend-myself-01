@@ -163,14 +163,14 @@ function Rightsidepanel({
           listofUsers[userIndex].setSurveyResult(count, "undefined");
         }
       } else if ((stage === 2 && count <= 3) || (stage === 2 && count >= 5)) {
-        // Change from using useState to calling the method
-        // directly from the list of object
-        // console.log("stage: " + stage + ", count: " + count);
-        // console.log("Start with: " + findQuestionIndex(stage, count));
+        // Remove the dollar sign if the user input contains dollar sign
         if (isContainDollarSign(input)) {
           input = removeDollarSign(input);
         }
+        // Remove the dot if the user input contains dot, just for checking
+        // if the input contains only digits
         var withoutDot = input.replace(/[.]/g, "");
+        // If the string contains only digits, convert it to a number
         if (/^\d+$/.test(withoutDot)) {
           input = parseFloat(input);
         }
