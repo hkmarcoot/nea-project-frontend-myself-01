@@ -17,10 +17,9 @@ function Rightsidepanel({
   findNextQuestionAndAsk,
   isSurveyStart,
   setIsSurveyStart,
-  isChatGPT,
-  setIsChatGPT,
 }) {
   const [newItem, setNewItem] = useState("");
+  const [isChatGPT, setIsChatGPT] = useState(false);
   const [isChatGPTTyping, setIsChatGPTTyping] = useState(false);
 
   function sendMessage() {
