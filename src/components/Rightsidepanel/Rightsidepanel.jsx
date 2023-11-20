@@ -56,7 +56,7 @@ function Rightsidepanel({
   function startAdvisorChat() {
     setIsSurveyStart(true);
     if (
-      listofUsers[userIndex].getSurveyResultStatus() === "answered" &&
+      listofUsers[userIndex].getSurveyResultDateStatus() === "answered" &&
       listofUsers[userIndex].isAllTaxpayerAnswerStatusAnswered()
     ) {
       // If the user have answered the survey,
