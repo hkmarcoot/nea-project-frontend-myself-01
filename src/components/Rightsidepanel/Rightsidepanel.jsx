@@ -67,7 +67,7 @@ function Rightsidepanel({
     } else if (listofUsers[userIndex].name === "New User") {
       addChatBotQuestion(botQuestion[0][0].question);
     } else {
-      addChatBotQuestion(botQuestion[1][0].question);
+      addChatBotQuestion(botQuestion[stage][count].question);
     }
   }
 
@@ -259,7 +259,8 @@ function Rightsidepanel({
       >
         <div id="chatbot" className="message">
           <span id="chatbot-reply">
-            Please Press 'Start Advisor Chat' button to begin
+            Please Press 'Start Advisor Chat' button to begin the survey or ask
+            a question in the Chat box.
           </span>
         </div>
       </div>
