@@ -1292,7 +1292,11 @@ function App() {
           setIsSurveyStart={setIsSurveyStart}
         />
       </div>
-      <Reportsection />
+      <Reportsection
+        userIndex={userIndex}
+        listofUsers={listofUsers}
+        taxPaid={listofUsers[userIndex].taxPaid}
+      />
     </div>
   );
 }
