@@ -14,17 +14,17 @@ function Reportsection({ userIndex, listofUsers, taxPaid }) {
     setIsGenerating(true);
 
     var contentMessage =
-      "I want to know what I should do with my tax in the UK. My tax band is " +
+      "Please give suggestion on my tax in the UK. My tax band is " +
       listofUsers[userIndex].band.answer +
-      ". My non-savings income is " +
-      listofUsers[userIndex].nonSavingsIncome.answer +
-      ". My interest is " +
-      listofUsers[userIndex].interest.answer +
-      ". My dividend is  " +
-      listofUsers[userIndex].dividend.answer +
+      ". My tax on non-savings income is " +
+      listofUsers[userIndex].taxOnNonSavingsIncome.answer +
+      ". My tax on interest is " +
+      listofUsers[userIndex].taxOnInterest.answer +
+      ". My tax on dividend is " +
+      listofUsers[userIndex].taxOnDividend.answer +
       ". My total tax is " +
       taxPaid.answer +
-      ". Also, please instruct me on how to do it. Please answer within 250 words.";
+      ". I don't need for calculation. Instead, please instruct me on how to submit my tax. Please answer within 250 words.";
 
     await openai.chat.completions
       .create({
