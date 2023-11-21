@@ -16,11 +16,11 @@ function Reportsection({ userIndex, listofUsers, taxPaid }) {
     var contentMessage =
       "I want to know what I should do with my tax in the UK. My tax band is " +
       listofUsers[userIndex].band.answer +
-      ". My tax on non-savings income is " +
+      ". My non-savings income needed to pay tax " +
       listofUsers[userIndex].taxOnNonSavingsIncome.answer +
-      ". My tax on interest is " +
+      ". My interest needed to pay tax" +
       listofUsers[userIndex].taxOnInterest.answer +
-      ". My tax on dividend is " +
+      ". My dividend needed to pay tax " +
       listofUsers[userIndex].taxOnDividend.answer +
       ". My total tax is " +
       taxPaid.answer +
