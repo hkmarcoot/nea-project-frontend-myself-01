@@ -24,7 +24,7 @@ function Reportsection({ userIndex, listofUsers, taxPaid }) {
       listofUsers[userIndex].taxOnDividend.answer +
       ". My total tax is " +
       taxPaid.answer +
-      ". I don't need for calculation. Instead, please instruct me on how to submit my tax. Please answer within 250 words.";
+      ". I don't need the calculation. Instead, please instruct me on how to submit my tax. Please answer within 250 words.";
 
     await openai.chat.completions
       .create({
