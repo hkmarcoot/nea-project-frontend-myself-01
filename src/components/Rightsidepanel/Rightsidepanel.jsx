@@ -3,7 +3,7 @@ import { sentenceBank, botPreMadeReply } from "../PreMadeReply/PreMadeReply";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: "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",
+  apiKey: import.meta.env.VITE_CHATGPT_API_KEY,
   dangerouslyAllowBrowser: true,
 });
 function Rightsidepanel({
