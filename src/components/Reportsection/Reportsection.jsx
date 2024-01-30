@@ -6,7 +6,7 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
-function Reportsection({ userIndex, listofUsers, taxPaid }) {
+function Reportsection({ userIndex, listofUsers, taxPaid, isChatGPT }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [report, setReport] = useState("");
 
@@ -65,7 +65,17 @@ function Reportsection({ userIndex, listofUsers, taxPaid }) {
       {taxPaid.status === "calculated" ? (
         <div className="w-full pb-16 bg-light-blue border-2">
           <div className="flex flex-row justify-center items-center">
-            <button onClick={() => generateReport()}>Generate Report</button>
+            {isChatGPT ? (
+              <button
+                className="cursor-not-allowed bg-gray-300 opacity-50"
+                disabled
+              >
+                Generate Report
+              </button>
+            ) : (
+              <button onClick={() => generateReport()}>Generate Report</button>
+            )}
+
             {isGenerating === true ? (
               <div className="italic">Loading...</div>
             ) : null}
@@ -73,7 +83,14 @@ function Reportsection({ userIndex, listofUsers, taxPaid }) {
           <div className="px-24">
             <p className="whitespace-pre-line text-left">{report}</p>
           </div>
-          {report === "" ? null : (
+          {report === "" ? null : isChatGPT ? (
+            <button
+              className="cursor-not-allowed bg-gray-300 opacity-50"
+              disabled
+            >
+              Download Report to Text File
+            </button>
+          ) : (
             <button onClick={() => textFileDownload()}>
               Download Report to Text File
             </button>

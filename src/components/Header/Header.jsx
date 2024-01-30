@@ -9,6 +9,7 @@ function Header({
   setListofUsers,
   findNextQuestionAndAsk,
   setIsImport,
+  isChatGPT,
 }) {
   const [isAddNewUserCardOpen, setIsAddNewUserCardOpen] = useState(false);
   const [isImportUserCardOpen, setIsImportUserCardOpen] = useState(false);
@@ -67,45 +68,79 @@ function Header({
 
   return (
     <header className="w-full flex flex-row bg-light-blue border-2">
-      <div className="bg-medium-blue w-3/5 ">
-        {listofUsers && (
-          <div className="flex flex-row h-full overflow-x-auto">
-            {listofUsers.map((data, index) => (
-              <UserCard
-                key={index}
-                index={index}
-                name={data.name}
-                setUserIndex={setUserIndex}
-                listofUsers={listofUsers}
-                userIndex={userIndex}
-                setListofUsers={setListofUsers}
-                findNextQuestionAndAsk={findNextQuestionAndAsk}
-              />
-            ))}
+      {isChatGPT ? (
+        <>
+          <div className="bg-medium-blue w-3/5 flex justify-center items-center">
+            <div className="inline-block text-white">
+              Notice: Please click on the Back To Advisor button to get all the
+              hidden elements back.
+            </div>
           </div>
-        )}
-      </div>
-      <div className="bg-dark-blue w-2/5 py-1 md:py-4 lg:py-4">
-        <button
-          className="px-1 mt-1"
-          onClick={() => setIsAddNewUserCardOpen(true)}
-        >
-          Add New User
-        </button>
-        <button
-          className="px-1 mt-1 mx-1"
-          onClick={() => {
-            setIsImportUserCardOpen(true);
-            // Set isImport to true so that the createNewUser() will not ask the first question
-            setIsImport(true);
-          }}
-        >
-          Import User Data
-        </button>
-        <button className="px-1 my-1" onClick={jsonFileDownload}>
-          Export User Data
-        </button>
-      </div>
+          <div className="bg-dark-blue w-2/5 py-1 md:py-4 lg:py-4">
+            <button
+              className="px-1 mt-1 cursor-not-allowed bg-gray-300 opacity-50"
+              disabled
+            >
+              Add New User
+            </button>
+            <button
+              className="px-1 mt-1 mx-1 cursor-not-allowed bg-gray-300 opacity-50"
+              disabled
+            >
+              Import User Data
+            </button>
+            <button
+              className="px-1 my-1 cursor-not-allowed bg-gray-300 opacity-50"
+              disabled
+            >
+              Export User Data
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="bg-medium-blue w-3/5 ">
+            {listofUsers && (
+              <div className="flex flex-row h-full overflow-x-auto">
+                {listofUsers.map((data, index) => (
+                  <UserCard
+                    key={index}
+                    index={index}
+                    name={data.name}
+                    setUserIndex={setUserIndex}
+                    listofUsers={listofUsers}
+                    userIndex={userIndex}
+                    setListofUsers={setListofUsers}
+                    findNextQuestionAndAsk={findNextQuestionAndAsk}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="bg-dark-blue w-2/5 py-1 md:py-4 lg:py-4">
+            <button
+              className="px-1 mt-1"
+              onClick={() => setIsAddNewUserCardOpen(true)}
+            >
+              Add New User
+            </button>
+            <button
+              className="px-1 mt-1 mx-1"
+              onClick={() => {
+                setIsImportUserCardOpen(true);
+                // Set isImport to true so that the createNewUser() will not ask the first question
+                setIsImport(true);
+              }}
+            >
+              Import User Data
+            </button>
+            <button className="px-1 my-1" onClick={jsonFileDownload}>
+              Export User Data
+            </button>
+          </div>
+        </>
+      )}
+
       {isAddNewUserCardOpen ? (
         <div className="window-modal">
           <div className="create-user-card">

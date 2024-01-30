@@ -1663,6 +1663,7 @@ function App() {
   const [count, setCount] = useState(0);
   const [isImport, setIsImport] = useState(false);
   const [isSurveyStart, setIsSurveyStart] = useState(false);
+  const [isChatGPT, setIsChatGPT] = useState(false);
 
   const botQuestion = [
     [
@@ -2191,6 +2192,7 @@ function App() {
         setListofUsers={setListofUsers}
         findNextQuestionAndAsk={findNextQuestionAndAsk}
         setIsImport={setIsImport}
+        isChatGPT={isChatGPT}
       />
       <div className="flex flex-row justify-center h-136">
         <Leftsidepanel
@@ -2204,6 +2206,7 @@ function App() {
           setCount={setCount}
           botQuestion={botQuestion}
           addChatBotQuestion={addChatBotQuestion}
+          isChatGPT={isChatGPT}
         />
         <Rightsidepanel
           userIndex={userIndex}
@@ -2216,12 +2219,15 @@ function App() {
           findNextQuestionAndAsk={findNextQuestionAndAsk}
           isSurveyStart={isSurveyStart}
           setIsSurveyStart={setIsSurveyStart}
+          isChatGPT={isChatGPT}
+          setIsChatGPT={setIsChatGPT}
         />
       </div>
       <Reportsection
         userIndex={userIndex}
         listofUsers={listofUsers}
         taxPaid={listofUsers[userIndex].taxPaid}
+        isChatGPT={isChatGPT}
       />
     </div>
   );
