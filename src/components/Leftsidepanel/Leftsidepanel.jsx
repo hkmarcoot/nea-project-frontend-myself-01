@@ -49,7 +49,7 @@ function Leftsidepanel({
               listofUsers[userIndex].setSurveyResultBackToInitial(3);
             }}
           >
-            Arrive Date: {userSurveyResult[0].answer}
+            Arrival Date: {userSurveyResult[0].answer}
           </p>
           <p>
             Number of Days From Arrival:{" "}
