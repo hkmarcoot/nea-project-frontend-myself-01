@@ -524,7 +524,51 @@ class Taxpayer {
           startingRateForSavings
         );
 
-        if (nonSavingsIncome + interest <= 50270) {
+        if (nonSavingsIncome + interest > 50270) {
+          /* ********************************************** */
+          // Case 2 in higher rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // The basic rate tax band for interest is 20%,
+          // the higher rate tax band for interest is 40%,
+          // which is treating interest as normal income.
+          // The personal savings allowance for higher rate is 500.
+          var basic_chargeable_interest =
+            50270 - nonSavingsIncome - 500 - startingRateForSavings;
+          var higher_chargeable_interest = nonSavingsIncome + interest - 50270;
+
+          // Case for negative interest because interest can be less than 500
+          if (basic_chargeable_interest <= 0) {
+            basic_chargeable_interest = 0;
+            // Because higher_chargeable_interest not relates to basic_chargeable_interest,
+            // higher_chargeable_interest = 0;
+          }
+
+          taxOnInterest =
+            basic_chargeable_interest * 0.2 + higher_chargeable_interest * 0.4;
+
+          // Showing the calculation for interest in Left Side Panel
+          this.taxOnInterestCalculation.answer =
+            "£" +
+            basic_chargeable_interest +
+            " * 20% + £" +
+            higher_chargeable_interest +
+            " * 40%";
+
+          this.taxOnInterestCalculation.status = "calculated";
+
+          higher_chargeable_dividend = deductAllowance(dividend, 2000);
+
+          taxOnDividend = higher_chargeable_dividend * 0.3375;
+
+          // Showing the calculation for dividend in Left Side Panel
+          this.taxOnDividendCalculation.answer =
+            "£" + higher_chargeable_dividend + " * 33.75%";
+          this.taxOnDividendCalculation.status = "calculated";
+        } else if (nonSavingsIncome + interest <= 50270) {
           /* ********************************************** */
           // Case 3 in higher rate tax band
           // Please refer to the bar chart
@@ -593,50 +637,6 @@ class Taxpayer {
             " * 8.75% + £" +
             higher_chargeable_dividend +
             " * 33.75%";
-          this.taxOnDividendCalculation.status = "calculated";
-        } else if (nonSavingsIncome + interest > 50270) {
-          /* ********************************************** */
-          // Case 2 in higher rate tax band
-          // Please refer to the bar chart
-          // in How The Tax Should Be Calculated version 2
-          // in algorithm section
-          /* ********************************************** */
-
-          // The basic rate tax band for interest is 20%,
-          // the higher rate tax band for interest is 40%,
-          // which is treating interest as normal income.
-          // The personal savings allowance for higher rate is 500.
-          var basic_chargeable_interest =
-            50270 - nonSavingsIncome - 500 - startingRateForSavings;
-          var higher_chargeable_interest = nonSavingsIncome + interest - 50270;
-
-          // Case for negative interest because interest can be less than 500
-          if (basic_chargeable_interest <= 0) {
-            basic_chargeable_interest = 0;
-            // Because higher_chargeable_interest not relates to basic_chargeable_interest,
-            // higher_chargeable_interest = 0;
-          }
-
-          taxOnInterest =
-            basic_chargeable_interest * 0.2 + higher_chargeable_interest * 0.4;
-
-          // Showing the calculation for interest in Left Side Panel
-          this.taxOnInterestCalculation.answer =
-            "£" +
-            basic_chargeable_interest +
-            " * 20% + £" +
-            higher_chargeable_interest +
-            " * 40%";
-
-          this.taxOnInterestCalculation.status = "calculated";
-
-          higher_chargeable_dividend = deductAllowance(dividend, 2000);
-
-          taxOnDividend = higher_chargeable_dividend * 0.3375;
-
-          // Showing the calculation for dividend in Left Side Panel
-          this.taxOnDividendCalculation.answer =
-            "£" + higher_chargeable_dividend + " * 33.75%";
           this.taxOnDividendCalculation.status = "calculated";
         }
       } else if (nonSavingsIncome <= 12570) {
