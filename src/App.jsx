@@ -1724,24 +1724,33 @@ class Taxpayer {
         }
       }
     }
+    /* ********** Format the answer to two decimals
+     if not a whole number ******* */
+    if (taxOnNonSavingsIncome % 1 !== 0) {
+      taxOnNonSavingsIncome = parseFloat(taxOnNonSavingsIncome.toFixed(2));
+    }
+    if (taxOnInterest % 1 !== 0) {
+      taxOnInterest = parseFloat(taxOnInterest.toFixed(2));
+    }
+    if (taxOnDividend % 1 !== 0) {
+      taxOnDividend = parseFloat(taxOnDividend.toFixed(2));
+    }
+    /* ********** Formatting ends *********** */
     this.totalIncome.answer = totalIncome;
     this.totalIncome.status = "calculated";
     this.nonSavingsIncome.answer = nonSavingsIncome;
     this.nonSavingsIncome.status = "calculated";
-    this.taxOnNonSavingsIncome.answer = taxOnNonSavingsIncome.toFixed(2);
+    this.taxOnNonSavingsIncome.answer = taxOnNonSavingsIncome;
     this.taxOnNonSavingsIncome.status = "calculated";
     this.dividend.answer = dividend;
     this.dividend.status = "calculated";
-    this.taxOnDividend.answer = taxOnDividend.toFixed(2);
+    this.taxOnDividend.answer = taxOnDividend;
     this.taxOnDividend.status = "calculated";
     this.interest.answer = interest;
     this.interest.status = "calculated";
-    this.taxOnInterest.answer = taxOnInterest.toFixed(2);
+    this.taxOnInterest.answer = taxOnInterest;
     this.taxOnInterest.status = "calculated";
-    this.taxPaid.answer =
-      taxOnNonSavingsIncome.toFixed(2) +
-      taxOnDividend.toFixed(2) +
-      taxOnInterest.toFixed(2);
+    this.taxPaid.answer = taxOnNonSavingsIncome + taxOnDividend + taxOnInterest;
     this.taxPaid.status = "calculated";
     this.band.answer = band;
     this.band.status = "calculated";
