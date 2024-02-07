@@ -1728,17 +1728,20 @@ class Taxpayer {
     this.totalIncome.status = "calculated";
     this.nonSavingsIncome.answer = nonSavingsIncome;
     this.nonSavingsIncome.status = "calculated";
-    this.taxOnNonSavingsIncome.answer = taxOnNonSavingsIncome;
+    this.taxOnNonSavingsIncome.answer = taxOnNonSavingsIncome.toFixed(2);
     this.taxOnNonSavingsIncome.status = "calculated";
     this.dividend.answer = dividend;
     this.dividend.status = "calculated";
-    this.taxOnDividend.answer = taxOnDividend;
+    this.taxOnDividend.answer = taxOnDividend.toFixed(2);
     this.taxOnDividend.status = "calculated";
     this.interest.answer = interest;
     this.interest.status = "calculated";
-    this.taxOnInterest.answer = taxOnInterest;
+    this.taxOnInterest.answer = taxOnInterest.toFixed(2);
     this.taxOnInterest.status = "calculated";
-    this.taxPaid.answer = taxOnNonSavingsIncome + taxOnDividend + taxOnInterest;
+    this.taxPaid.answer =
+      taxOnNonSavingsIncome.toFixed(2) +
+      taxOnDividend.toFixed(2) +
+      taxOnInterest.toFixed(2);
     this.taxPaid.status = "calculated";
     this.band.answer = band;
     this.band.status = "calculated";
