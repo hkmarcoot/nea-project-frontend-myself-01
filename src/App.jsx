@@ -449,6 +449,13 @@ class Taxpayer {
       // Basic rate tax band is 20% for wage between 12570 and 50270
       nonSavingsIncome = totalIncome - dividend - interest;
       if (nonSavingsIncome > 50270) {
+        /* ********************************************** */
+        // Case 1 in higher rate tax band
+        // Please refer to the bar chart
+        // in How The Tax Should Be Calculated version 2
+        // in algorithm section
+        /* ********************************************** */
+
         // The income between value and 50270 is taxed at 40%,
         // the income between 50270 and personal allowance is taxed at 20%.
         taxOnNonSavingsIncome =
@@ -518,6 +525,13 @@ class Taxpayer {
         );
 
         if (nonSavingsIncome + interest <= 50270) {
+          /* ********************************************** */
+          // Case 3 in higher rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
           // The interest deducts the personal savings allowance,
           // which is 500 for higher rate tax band
           interestAfterPersonalSavingsAllowance = deductAllowance(
@@ -581,6 +595,13 @@ class Taxpayer {
             " * 33.75%";
           this.taxOnDividendCalculation.status = "calculated";
         } else if (nonSavingsIncome + interest > 50270) {
+          /* ********************************************** */
+          // Case 2 in higher rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
           // The basic rate tax band for interest is 20%,
           // the higher rate tax band for interest is 40%,
           // which is treating interest as normal income.
@@ -620,6 +641,14 @@ class Taxpayer {
         }
       } else if (nonSavingsIncome <= 12570) {
         if (nonSavingsIncome + interest > 50270) {
+          /* ********************************************** */
+          // Case 4 in higher rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // Calculate the tax on non-savings income with the personal allowance
           if (personalAllowance >= nonSavingsIncome) {
             taxOnNonSavingsIncome = 0;
             var remain_personal_allowance =
@@ -637,6 +666,7 @@ class Taxpayer {
             "£" + chargeable_nonSavingsIncome + " * 20%";
           this.taxOnNonSavingsIncomeCalculation.status = "calculated";
 
+          // Calculate the tax on interest with the personal allowance
           if (nonSavingsIncome + 500 >= personalAllowance) {
             // var personal_nonchargeable_interest =
             //  personalAllowance - nonSavingsIncome;
@@ -684,6 +714,14 @@ class Taxpayer {
           nonSavingsIncome + interest > 12570 &&
           nonSavingsIncome + interest <= 50270
         ) {
+          /* ********************************************** */
+          // Case 5 in higher rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // Calculate the tax on non-savings income with the personal allowance
           if (personalAllowance >= nonSavingsIncome) {
             taxOnNonSavingsIncome = 0;
             remain_personal_allowance = personalAllowance - nonSavingsIncome;
@@ -700,6 +738,7 @@ class Taxpayer {
             "£" + chargeable_nonSavingsIncome + " * 20%";
           this.taxOnNonSavingsIncomeCalculation.status = "calculated";
 
+          // Calculate the tax on interest with the personal allowance
           if (nonSavingsIncome + 500 >= personalAllowance) {
             // personal_nonchargeable_interest =
             //   personalAllowance - nonSavingsIncome;
@@ -739,6 +778,7 @@ class Taxpayer {
 
           this.taxOnInterestCalculation.status = "calculated";
 
+          // Calculate the tax on dividend with the personal allowance
           if (nonSavingsIncome + interest < 50270 - 2000) {
             basic_chargeable_dividend =
               50270 - nonSavingsIncome - interest - 2000;
@@ -778,6 +818,14 @@ class Taxpayer {
             " * 33.75%";
           this.taxOnDividendCalculation.status = "calculated";
         } else if (nonSavingsIncome + interest <= 12570) {
+          /* ********************************************** */
+          // Case 6 in higher rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // Calculate the tax on non-savings income with the personal allowance
           if (personalAllowance >= nonSavingsIncome) {
             taxOnNonSavingsIncome = 0;
             chargeable_nonSavingsIncome = 0;
@@ -794,6 +842,7 @@ class Taxpayer {
             "£" + chargeable_nonSavingsIncome + " * 20%";
           this.taxOnNonSavingsIncomeCalculation.status = "calculated";
 
+          // Calculate the tax on interest with the personal allowance
           if (remain_personal_allowance >= interest) {
             taxOnInterest = 0;
             personal_chargeable_interest = 0;
@@ -810,6 +859,7 @@ class Taxpayer {
 
           this.taxOnInterestCalculation.status = "calculated";
 
+          // Calculate the tax on dividend with the personal allowance
           // The Starting point for counting personal chargeable dividend
           if (nonSavingsIncome + interest >= personalAllowance) {
             var startingPointOfDividend = nonSavingsIncome + interest;
@@ -880,6 +930,13 @@ class Taxpayer {
       // Basic rate tax band is 20% for wage between 12570 and 50270
       nonSavingsIncome = totalIncome - dividend - interest;
       if (nonSavingsIncome > 125140) {
+        /* ********************************************** */
+        // Case 1 in additional rate tax band
+        // Please refer to the bar chart
+        // in How The Tax Should Be Calculated version 2
+        // in algorithm section
+        /* ********************************************** */
+
         // The income between value and 125140 is taxed at 45%,
         // The income between 125140 and 50270 is taxed at 40%,
         // the income between 50270 and personal allowance is taxed at 20%.
@@ -919,6 +976,13 @@ class Taxpayer {
         this.taxOnDividendCalculation.status = "calculated";
       } else if (nonSavingsIncome > 50270 && nonSavingsIncome <= 125140) {
         if (nonSavingsIncome + interest > 125140) {
+          /* ********************************************** */
+          // Case 2 in additional rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
           // The income between value and 50270 is taxed at 40%,
           // the income between 50270 and personal allowance is taxed at 20%.
           taxOnNonSavingsIncome =
@@ -970,8 +1034,15 @@ class Taxpayer {
           nonSavingsIncome + interest > 50270 &&
           nonSavingsIncome + interest <= 125140
         ) {
+          /* ********************************************** */
+          // Case 3 in additional rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
           // The income between value and 50270 is taxed at 40%,
-          // the income between 50270 and personal allowance is taxed at 20%.
+          // The income between 50270 and personal allowance is taxed at 20%.
           taxOnNonSavingsIncome =
             (nonSavingsIncome - 50270) * 0.4 +
             (50270 - personalAllowance) * 0.2;
@@ -1039,7 +1110,14 @@ class Taxpayer {
         }
       } else if (nonSavingsIncome > 12570 && nonSavingsIncome <= 50270) {
         if (nonSavingsIncome + interest > 125140) {
-          // the income between value and personal allowance is taxed at 20%.
+          /* ********************************************** */
+          // Case 4 in additional rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // The income between value and personal allowance is taxed at 20%.
           taxOnNonSavingsIncome = (nonSavingsIncome - personalAllowance) * 0.2;
 
           // Showing the calculation for non-savings income in Left Side Panel
@@ -1108,7 +1186,14 @@ class Taxpayer {
           nonSavingsIncome + interest > 50270 &&
           nonSavingsIncome + interest <= 125140
         ) {
-          // the income between value and personal allowance is taxed at 20%.
+          /* ********************************************** */
+          // Case 5 in additional rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // The income between value and personal allowance is taxed at 20%.
           taxOnNonSavingsIncome = (nonSavingsIncome - personalAllowance) * 0.2;
 
           // Showing the calculation for non-savings income in Left Side Panel
@@ -1198,7 +1283,14 @@ class Taxpayer {
           nonSavingsIncome + interest > 12570 &&
           nonSavingsIncome + interest <= 50270
         ) {
-          // the income between value and personal allowance is taxed at 20%.
+          /* ********************************************** */
+          // Case 6 in additional rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // The income between value and personal allowance is taxed at 20%.
           taxOnNonSavingsIncome = (nonSavingsIncome - personalAllowance) * 0.2;
 
           // Showing the calculation for non-savings income in Left Side Panel
@@ -1237,6 +1329,7 @@ class Taxpayer {
           // Dividend chargeable at higher rate
           higher_chargeable_dividend = 125140 - 50270;
 
+          // Case for negative dividend
           if (basic_chargeable_dividend < 0) {
             basic_chargeable_dividend = 0;
             higher_chargeable_dividend =
@@ -1269,6 +1362,14 @@ class Taxpayer {
         }
       } else if (nonSavingsIncome <= 12570) {
         if (nonSavingsIncome + interest > 125140) {
+          /* ********************************************** */
+          // Case 7 in additional rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // Calculate the tax on non-savings income with the personal allowance
           if (personalAllowance >= nonSavingsIncome) {
             taxOnNonSavingsIncome = 0;
             chargeable_nonSavingsIncome = 0;
@@ -1286,6 +1387,7 @@ class Taxpayer {
             "£" + chargeable_nonSavingsIncome + " * 20%";
           this.taxOnNonSavingsIncomeCalculation.status = "calculated";
 
+          // Calculate the tax on interest with the personal allowance
           // The Starting point for counting personal chargeable interest
           if (nonSavingsIncome >= personalAllowance) {
             var startingPointOfInterest = nonSavingsIncome;
@@ -1340,6 +1442,14 @@ class Taxpayer {
           nonSavingsIncome + interest > 50270 &&
           nonSavingsIncome + interest <= 125140
         ) {
+          /* ********************************************** */
+          // Case 8 in additional rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // Calculate the tax on non-savings income with the personal allowance
           if (personalAllowance >= nonSavingsIncome) {
             taxOnNonSavingsIncome = 0;
             chargeable_nonSavingsIncome = 0;
@@ -1357,6 +1467,7 @@ class Taxpayer {
             "£" + chargeable_nonSavingsIncome + " * 20%";
           this.taxOnNonSavingsIncomeCalculation.status = "calculated";
 
+          // Calculate the tax on interest with the personal allowance
           // The Starting point for counting personal chargeable interest
           if (nonSavingsIncome >= personalAllowance) {
             startingPointOfInterest = nonSavingsIncome;
@@ -1433,6 +1544,14 @@ class Taxpayer {
           nonSavingsIncome + interest > 12570 &&
           nonSavingsIncome + interest <= 50270
         ) {
+          /* ********************************************** */
+          // Case 9 in additional rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // Calculate the tax on non-savings income with the personal allowance
           if (personalAllowance >= nonSavingsIncome) {
             taxOnNonSavingsIncome = 0;
             chargeable_nonSavingsIncome = 0;
@@ -1450,6 +1569,7 @@ class Taxpayer {
             "£" + chargeable_nonSavingsIncome + " * 20%";
           this.taxOnNonSavingsIncomeCalculation.status = "calculated";
 
+          // Calculate the tax on interest with the personal allowance
           // The Starting point for counting personal chargeable interest
           if (nonSavingsIncome >= personalAllowance) {
             startingPointOfInterest = nonSavingsIncome;
@@ -1468,6 +1588,7 @@ class Taxpayer {
           basic_chargeable_interest =
             nonSavingsIncome + interest - 12570 - startingRateForSavings;
 
+          // Case for negative interest
           if (basic_chargeable_interest < 0) {
             basic_chargeable_interest = 0;
           }
@@ -1493,6 +1614,7 @@ class Taxpayer {
           // Dividend chargeable at higher rate
           higher_chargeable_dividend = 125140 - 50270;
 
+          // Case for negative dividend
           if (basic_chargeable_dividend < 0) {
             basic_chargeable_dividend = 0;
             higher_chargeable_dividend =
@@ -1523,6 +1645,14 @@ class Taxpayer {
             " * 39.35%";
           this.taxOnDividendCalculation.status = "calculated";
         } else if (nonSavingsIncome + interest <= 12570) {
+          /* ********************************************** */
+          // Case 10 in additional rate tax band
+          // Please refer to the bar chart
+          // in How The Tax Should Be Calculated version 2
+          // in algorithm section
+          /* ********************************************** */
+
+          // Calculate the tax on non-savings income with the personal allowance
           if (personalAllowance >= nonSavingsIncome) {
             taxOnNonSavingsIncome = 0;
             chargeable_nonSavingsIncome = 0;
@@ -1539,6 +1669,7 @@ class Taxpayer {
             "£" + chargeable_nonSavingsIncome + " * 20%";
           this.taxOnNonSavingsIncomeCalculation.status = "calculated";
 
+          // Calculate the tax on interest with the personal allowance
           if (remain_personal_allowance >= interest) {
             taxOnInterest = 0;
             personal_chargeable_interest = 0;
@@ -1555,6 +1686,7 @@ class Taxpayer {
 
           this.taxOnInterestCalculation.status = "calculated";
 
+          // Calculate the tax on dividend with the personal allowance
           // The Starting point for counting personal chargeable dividend
           if (nonSavingsIncome + interest >= personalAllowance) {
             startingPointOfDividend = nonSavingsIncome + interest;
