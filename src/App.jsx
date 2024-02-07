@@ -560,7 +560,7 @@ class Taxpayer {
 
           this.taxOnInterestCalculation.status = "calculated";
 
-          higher_chargeable_dividend = deductAllowance(dividend, 2000);
+          var higher_chargeable_dividend = deductAllowance(dividend, 2000);
 
           taxOnDividend = higher_chargeable_dividend * 0.3375;
 
@@ -607,7 +607,7 @@ class Taxpayer {
             37700 - (nonSavingsIncome - personalAllowance) - interest - 2000;
 
           // Dividend chargeable at higher rate
-          var higher_chargeable_dividend =
+          higher_chargeable_dividend =
             dividend - basic_chargeable_dividend - 2000;
 
           // Case for negative dividend
